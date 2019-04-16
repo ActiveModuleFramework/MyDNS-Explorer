@@ -1,0 +1,9 @@
+{
+//exit"terminal.integrated.shell.windows": "C:/Windows/System32/wsl.exe",
+
+	"easysass.formats": [{
+		"format": "expanded",
+		"extension": ".css"
+	}],
+	"easysass.targetDir": "./public/css",
+}
