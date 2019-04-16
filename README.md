@@ -18,7 +18,7 @@ SPA(SinglePageApplication)を前提とするフレームワークです
 　ソースコードは自由に使って構いませんが、無保証です  
 
 ## スクリーンショット
-
+![スクリーンショット](https://raw.githubusercontent.com/activemoduleframework/MyDNS-Explorer/sc/ScreenShot01.png)
 
 ## 起動方法
 
