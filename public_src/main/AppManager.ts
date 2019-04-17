@@ -18,7 +18,7 @@ class AppManager {
 		this.init()
 	}
 	init() {
-		this.adapter = new JSW.Adapter('/')
+		this.adapter = new JSW.Adapter('./')
 		this.mainWindow = new JSW.Window()
 		//this.mainWindow.setAnimation
 		this.mainWindow.setOverlap(true)

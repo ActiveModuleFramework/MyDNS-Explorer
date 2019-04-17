@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const util = require("util");
 const fs = require("fs");
 const path = require("path");
-const fsp = fs.promises;
+const sprintf_1 = require("sprintf");
 /**
  *トップページ表示用クラス
 *
@@ -21,57 +21,80 @@ class BaseHtml {
     * @param {string[]} priorityJs		優先度の高いJSファイル
     * @memberof BaseHtml
     */
-    static async output(res, cssPath, jsPath, priorityJs) {
+    static async output(res, rootPath, cssPath, jsPath, priorityJs) {
         function createJSInclude(files) {
             let s = "";
             for (const file of files) {
-                if (path.extname(file).toLowerCase() === '.js')
-                    s += util.format('\n\t<script type="text/javascript" src="js/%s"></script>', file);
+                const dir = file.dir;
+                s += util.format('\n\t<script type="text/javascript" src="%s/%s"></script>', dir, file.name);
             }
             return s;
         }
         function createCSSInclude(files) {
             let s = "";
             for (const file of files) {
-                if (path.extname(file).toLowerCase() === '.css')
-                    s += util.format('\n\t<link rel="stylesheet" href="css/%s">', file);
+                const dir = file.dir;
+                s += util.format('\n\t<link rel="stylesheet" href="%s/%s">', dir, file.name);
             }
             return s;
         }
-        const wait = [];
-        wait.push(fsp.readFile('template/index.html', 'utf-8'));
-        //CSSファイルリストの読み込み
-        for (let dir of cssPath)
-            wait.push(fsp.readdir(dir));
-        //JSファイルリストの読み込み
-        for (let dir of jsPath)
-            wait.push(fsp.readdir(dir));
-        const recvList = await Promise.all(wait).catch(() => { return null; });
-        if (!recvList) {
-            return false;
-        }
-        const html = recvList[0];
-        const cssFiles = [];
-        const jsFiles = [];
-        let index = 1;
-        for (let i = 0; i < cssPath.length; i++) {
-            Object.assign(cssFiles, recvList[index + i]);
-        }
-        index += cssPath.length;
-        for (let i = 0; i < jsPath.length; i++) {
-            Object.assign(jsFiles, recvList[index + i]);
-        }
-        //JSを優先順位に従って並び替え
-        for (let i = priorityJs.length - 1; i >= 0; --i) {
-            const index = jsFiles.indexOf(priorityJs[i]);
-            if (index >= 0) {
-                jsFiles.splice(index, 1);
-                jsFiles.unshift(priorityJs[i]);
+        function addDateParam(files) {
+            for (const file of files) {
+                const date = file.date;
+                file.name +=
+                    sprintf_1.sprintf('?ver=%04d%02d%02d%02d%02d%02d', date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
             }
         }
+        let html;
+        try {
+            html = fs.readFileSync('template/index.html', 'utf-8');
+        }
+        catch (e) {
+            return false;
+        }
+        const cssFiles = [];
+        const jsFiles = [];
+        //CSSファイルリストの読み込み
+        for (let dir of cssPath) {
+            const files = fs.readdirSync(`${rootPath}/${dir}`);
+            for (const name of files) {
+                if (path.extname(name).toLowerCase() === '.css') {
+                    const stat = fs.statSync(`${rootPath}/${dir}/${name}`);
+                    cssFiles.push({ dir, name, date: stat.mtime });
+                }
+            }
+        }
+        //JSファイルリストの読み込み
+        for (let dir of jsPath) {
+            const files = fs.readdirSync(`${rootPath}/${dir}`);
+            for (const name of files) {
+                if (path.extname(name).toLowerCase() === '.js') {
+                    const stat = fs.statSync(`${rootPath}/${dir}/${name}`);
+                    jsFiles.push({ dir, name, date: stat.mtime });
+                }
+            }
+        }
+        //JSを優先順位に従って並び替え
+        jsFiles.sort((a, b) => {
+            const v1 = priorityJs.indexOf(a.name);
+            const v2 = priorityJs.indexOf(b.name);
+            return v2 - v1;
+        });
+        //時間情報の追加(キャッシュ対策)
+        addDateParam(jsFiles);
+        addDateParam(cssFiles);
         const data = html.replace("[[SCRIPTS]]", createJSInclude(jsFiles))
-            .replace("[[CSS]]", createCSSInclude(recvList[1]));
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8' });
+            .replace("[[CSS]]", createCSSInclude(cssFiles));
+        const links = [];
+        for (const file of cssFiles) {
+            const dir = file.dir;
+            links.push(`link: <${dir}/${file.name}>;rel=preload;as=script;`);
+        }
+        for (const file of jsFiles) {
+            const dir = file.dir;
+            links.push(`link: <${dir}/${file.name}>;rel=preload;as=style;`);
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8', 'link': links });
         res.end(data);
         return true;
     }

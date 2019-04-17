@@ -219,7 +219,7 @@ export class Manager {
 					res.json({ error: "リクエストエラー" })
 				}
 			} else {
-				if (!await BaseHtml.output(res, params.cssPath, params.jsPath, params.jsPriority))
+				if (!await BaseHtml.output(res, params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
 					next()
 			}
 		})

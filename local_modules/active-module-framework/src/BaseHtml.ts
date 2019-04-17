@@ -2,7 +2,13 @@ import * as util from 'util';
 import * as fs from 'fs';
 import * as path from 'path'
 import * as express from 'express'
-const fsp = fs.promises;
+import {sprintf} from 'sprintf'
+
+interface FileInfo{
+	dir: string
+	name: string
+	date: Date
+}
 
 
 /**
@@ -22,60 +28,88 @@ export class BaseHtml {
 	* @param {string[]} priorityJs		優先度の高いJSファイル
 	* @memberof BaseHtml
 	*/
-	static async output(res: express.Response, cssPath: string[], jsPath: string[], priorityJs: string[]) {
-		function createJSInclude(files: string[]) {
+	static async output(res: express.Response, rootPath:string,cssPath: string[], jsPath: string[], priorityJs: string[]) {
+		function createJSInclude(files: FileInfo[]) {
 			let s = "";
 			for (const file of files) {
-				if (path.extname(file).toLowerCase() === '.js')
-					s += util.format('\n\t<script type="text/javascript" src="js/%s"></script>', file);
+				const dir = (file as any).dir
+				s += util.format('\n\t<script type="text/javascript" src="%s/%s"></script>', dir, file.name);
 			}
 			return s;
 		}
-		function createCSSInclude(files: string[]) {
+		function createCSSInclude(files: FileInfo[]) {
 			let s = "";
 			for (const file of files) {
-				if (path.extname(file).toLowerCase() === '.css')
-					s += util.format('\n\t<link rel="stylesheet" href="css/%s">', file);
+				const dir = (file as any).dir
+				s += util.format('\n\t<link rel="stylesheet" href="%s/%s">', dir,file.name);
 			}
 			return s;
 		}
-		const wait: PromiseLike<any>[] = []
-		wait.push(fsp.readFile('template/index.html', 'utf-8'))
-		//CSSファイルリストの読み込み
-		for (let dir of cssPath)
-			wait.push(fsp.readdir(dir))
-		//JSファイルリストの読み込み
-		for (let dir of jsPath)
-			wait.push(fsp.readdir(dir))
+		function addDateParam(files: FileInfo[]){
+			for (const file of files) {
+				const date = file.date
+				file.name +=
+					sprintf('?ver=%04d%02d%02d%02d%02d%02d',
+						date.getFullYear(),
+						date.getMonth()+1,
+						date.getDate(),
+						date.getHours(),
+						date.getMinutes(),
+						date.getSeconds())
+			}
+		}
 
-		const recvList = await Promise.all(wait).catch(()=>{return null})
-		if (!recvList){
+		let html;
+		try{
+			html = fs.readFileSync('template/index.html', 'utf-8')
+		}catch(e){
 			return false
 		}
-		const html = recvList[0] as string
-		const cssFiles = []
-		const jsFiles = []
-
-		let index = 1;
-		for (let i = 0; i < cssPath.length; i++) {
-			Object.assign(cssFiles, recvList[index + i]);
+		const cssFiles: FileInfo[] = []
+		const jsFiles: FileInfo[] = []
+		//CSSファイルリストの読み込み
+		for (let dir of cssPath){
+			const files = fs.readdirSync(`${rootPath}/${dir}`)
+			for(const name of files){
+				if (path.extname(name).toLowerCase() === '.css'){
+					const stat = fs.statSync(`${rootPath}/${dir}/${name}`)
+					cssFiles.push({dir,name,date:stat.mtime})
+				}
+			}
 		}
-		index += cssPath.length
-		for (let i = 0; i < jsPath.length; i++) {
-			Object.assign(jsFiles, recvList[index + i]);
+		//JSファイルリストの読み込み
+		for (let dir of jsPath) {
+			const files = fs.readdirSync(`${rootPath}/${dir}`)
+			for (const name of files) {
+				if (path.extname(name).toLowerCase() === '.js') {
+					const stat = fs.statSync(`${rootPath}/${dir}/${name}`)
+					jsFiles.push({ dir, name, date: stat.mtime })
+				}
+			}
 		}
 		//JSを優先順位に従って並び替え
-		for (let i = priorityJs.length - 1; i >= 0; --i) {
-			const index = jsFiles.indexOf(priorityJs[i])
-			if (index >= 0) {
-				jsFiles.splice(index, 1)
-				jsFiles.unshift(priorityJs[i])
-			}
+		jsFiles.sort((a,b)=>{
+			const v1 = priorityJs.indexOf(a.name)
+			const v2 = priorityJs.indexOf(b.name)
+			return v2 - v1
+		})
 
-		}
+		//時間情報の追加(キャッシュ対策)
+		addDateParam(jsFiles)
+		addDateParam(cssFiles)
+
 		const data = html.replace("[[SCRIPTS]]", createJSInclude(jsFiles))
-			.replace("[[CSS]]", createCSSInclude(recvList[1]))
-		res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8' });
+			.replace("[[CSS]]", createCSSInclude(cssFiles))
+		const links:string[] = []
+		for(const file of cssFiles){
+			const dir = (file as any).dir
+			links.push(`link: <${dir}/${file.name}>;rel=preload;as=script;`)
+		}
+		for (const file of jsFiles) {
+			const dir = (file as any).dir
+			links.push(`link: <${dir}/${file.name}>;rel=preload;as=style;`)
+		}
+		res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8','link':links });
 		res.end(data)
 
 		return true

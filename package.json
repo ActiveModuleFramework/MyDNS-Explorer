@@ -10,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/jsdom": "^12.2.3",
     "active-module-framework": "file:local_modules/active-module-framework/dist",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "ts-node": "^8.0.3",
-    "typescript": "^3.4.3",
-    "@types/jsdom": "^12.2.3"
+    "typescript": "^3.4.3"
   }
 }
