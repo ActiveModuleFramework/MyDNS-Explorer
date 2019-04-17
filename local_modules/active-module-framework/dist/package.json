@@ -6,9 +6,6 @@
 	"private": true,
 	"author": "SoraKumo",
 	"license": "MIT",
-	"scripts": {
-		"watch":"tsc -w ../"
-	},
 	"dependencies": {
 		"capture-console": "^1.0.1",
 		"express": "^4.16.4",
@@ -16,7 +13,8 @@
 		"parse5": "^5.1.0",
 		"sqlite3": "^4.0.6",
 		"ts-node": "^8.0.3",
-		"typescript": "^3.4.3"
+		"typescript": "^3.4.3",
+	    "sprintf": "^0.1.5"
 	},
 	"devDependencies": {
 		"@types/sha256": "^0.2.0",
