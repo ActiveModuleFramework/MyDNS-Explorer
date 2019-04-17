@@ -12,6 +12,7 @@ class Module {
     static async onCreateModule() { return true; }
     static async onDestroyModule() { return true; }
     static getLocalDB() { return Module.manager.getLocalDB(); }
+    static output(msg, ...params) { Module.manager.output(msg, ...params); }
     setSession(session) { this.session = session; }
     async onStartSession() { }
     async onEndSession() { }

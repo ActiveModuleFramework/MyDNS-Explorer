@@ -2,7 +2,7 @@ module.exports = {
 	apps: [{
 		name: "app",
 		script: "./app/index.ts",
-		watch: ["./app", "./app/*"],
+		watch: ["./app", "./local_modules"],
 		instances: 1,
 		exec_mode: "cluster_mode",
 		log_date_format: "YYYY-MM-DD HH:mm Z",

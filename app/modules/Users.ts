@@ -56,7 +56,8 @@ export class Users extends Module{
 		if(!user)
 			user = this.logout()
 		this.userInfo = user
-		console.log('ユーザ: %s', JSON.stringify(this.userInfo) )
+
+		Module.output('ユーザ: %s', JSON.stringify(this.userInfo) )
 	}
 	async isLogin(userId, userPass, local){
 		const localDB = Module.getManager().getLocalDB()

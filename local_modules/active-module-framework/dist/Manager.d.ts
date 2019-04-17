@@ -1,6 +1,33 @@
-import * as express from 'express';
 import { Module } from './Module';
 import { LocalDB } from './LocalDB';
+/**
+ *マネージャ初期化用パラメータ
+ *
+ * @export
+ * @interface ManagerParams
+ * @property {string} rootPath	一般コンテンツのローカルパス
+ * @property {string} remotePath 一般コンテンツのリモートパス
+ * @property {string} execPath	コマンド実行用リモートパス
+ * @property {string} localDBPath	ローカルDBパス
+ * @property {string} modulePath	モジュール配置パス
+ * @property {string[]} cssPath	自動ロード用CSSパス
+ * @property {string[]} jsPath	一般コンテンツのローカルパス
+ * @property {string[]} jsPriority	優先JSファイル設定
+ * @property {boolean} debug	デバッグ用メッセージ出力
+ * @property {number | string} listen	受付ポート/UNIXドメインソケット
+ */
+export interface ManagerParams {
+    rootPath: string;
+    remotePath: string;
+    execPath: string;
+    localDBPath: string;
+    modulePath: string;
+    cssPath: string[];
+    jsPath: string[];
+    jsPriority: string[];
+    debug: boolean;
+    listen: number | string;
+}
 /**
  *フレームワーク総合管理用クラス
  *
@@ -8,18 +35,28 @@ import { LocalDB } from './LocalDB';
  * @class Manager
  */
 export declare class Manager {
+    debug: boolean;
     localDB: LocalDB;
     stderr: string;
     modules: {
         [key: string]: typeof Module;
     };
     priorityList: typeof Module[][];
+    express: import("express-serve-static-core").Express;
     static initFlag: any;
     /**
      *Creates an instance of Manager.
      * @memberof Manager
      */
-    constructor();
+    constructor(params: ManagerParams);
+    /**
+     *
+     *
+     * @param {string} msg
+     * @param {*} params
+     * @memberof Manager
+     */
+    output(msg: string, ...params: any[]): void;
     /**
      * 初期化処理
      *
@@ -28,15 +65,14 @@ export declare class Manager {
      * @returns {Promise<boolean>}	true:正常終了 false:異常終了
      * @memberof Manager
      */
-    init(localDBPath: string, modulePath: string): Promise<boolean>;
+    init(params: ManagerParams): Promise<boolean>;
     /**
      *Expressの設定を行う
      *
-     * @param {express.Express} express	Expressインスタンス
      * @param {string} path				ドキュメントのパス
      * @memberof Manager
      */
-    setExpress(express: express.Express, path: string): void;
+    initExpress(params: ManagerParams): void;
     /**
      * 終了処理
      *
@@ -70,4 +106,11 @@ export declare class Manager {
      * @memberof Manager
      */
     private exec;
+    listen(value: number | string): void;
+    /**
+     *前回のソケットファイルの削除
+    *
+    * @memberof Main
+    */
+    removeSock(path: string): void;
 }
