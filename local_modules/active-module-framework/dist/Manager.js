@@ -4,8 +4,10 @@ const fs = require("fs");
 const util = require("util");
 const capcon = require("capture-console");
 const path = require("path");
+const express = require("express");
 const LocalDB_1 = require("./LocalDB");
 const Session_1 = require("./Session");
+const BaseHtml_1 = require("./BaseHtml");
 /**
  *フレームワーク総合管理用クラス
  *
@@ -17,14 +19,28 @@ class Manager {
      *Creates an instance of Manager.
      * @memberof Manager
      */
-    constructor() {
+    constructor(params) {
         this.localDB = new LocalDB_1.LocalDB();
         this.stderr = '';
-        console.log('--- Start Manager');
+        this.express = express();
+        this.debug = params.debug;
+        this.output('--- Start Manager');
         //エラーメッセージをキャプチャ
         capcon.startCapture(process.stderr, (stderr) => {
             this.stderr += stderr;
         });
+        this.init(params);
+    }
+    /**
+     *
+     *
+     * @param {string} msg
+     * @param {*} params
+     * @memberof Manager
+     */
+    output(msg, ...params) {
+        if (this.debug)
+            console.log(msg, ...params);
     }
     /**
      * 初期化処理
@@ -34,7 +50,8 @@ class Manager {
      * @returns {Promise<boolean>}	true:正常終了 false:異常終了
      * @memberof Manager
      */
-    async init(localDBPath, modulePath) {
+    async init(params) {
+        //ファイルの存在確認
         function isExistFile(path) {
             try {
                 fs.statSync(path);
@@ -44,23 +61,25 @@ class Manager {
             }
             return true;
         }
+        //Expressの初期化
+        this.initExpress(params);
         //ローカルDBを開く
-        if (!await this.localDB.open(localDBPath)) {
-            console.error("ローカルDBオープンエラー:%s", localDBPath);
+        if (!await this.localDB.open(params.localDBPath)) {
+            console.error("ローカルDBオープンエラー:%s", params.localDBPath);
             return false;
         }
         //カレントパスの取得
         const cpath = path.resolve("");
         //モジュールを読み出す
-        const files = fs.readdirSync(modulePath, { withFileTypes: true });
+        const files = fs.readdirSync(params.modulePath, { withFileTypes: true });
         const modules = {};
         for (let ent of files) {
             let r;
             if (ent.isFile()) {
-                r = require(cpath + '/' + modulePath + '/' + ent.name);
+                r = require(cpath + '/' + params.modulePath + '/' + ent.name);
             }
             else if (ent.isDirectory()) {
-                const basePath = `${cpath}/${modulePath}/${ent.name}/`;
+                const basePath = `${cpath}/${params.modulePath}/${ent.name}/`;
                 let path = null;
                 for (const name of ['index.ts', 'index.js', ent.name + '.ts', ent.name + '.js']) {
                     if (isExistFile(basePath + name)) {
@@ -104,7 +123,7 @@ class Manager {
                 if (module.onCreateModule) {
                     module.setManager(this);
                     try {
-                        console.log("モジュール初期化:%s", module.name);
+                        this.output("モジュール初期化:%s", module.name);
                         const result = await module.onCreateModule();
                         if (!result) {
                             console.error("モジュール初期化エラー:%s", module.name);
@@ -126,20 +145,22 @@ class Manager {
             }
         }
         Manager.initFlag = true;
+        this.listen(params.listen);
         return true;
     }
     /**
      *Expressの設定を行う
      *
-     * @param {express.Express} express	Expressインスタンス
      * @param {string} path				ドキュメントのパス
      * @memberof Manager
      */
-    setExpress(express, path) {
+    initExpress(params) {
         const commands = { exec: null };
         commands.exec = (req, res) => { this.exec(req, res); };
+        //一般コンテンツの対応付け
+        this.express.use(params.remotePath, express.static(params.rootPath));
         //クライアント接続時の処理
-        express.all(path, (req, res, next) => {
+        this.express.all(params.remotePath, async (req, res, next) => {
             //初期化が完了しているかどうか
             if (!Manager.initFlag) {
                 res.header("Content-Type", "text/plain; charset=utf-8");
@@ -158,7 +179,8 @@ class Manager {
                 }
             }
             else {
-                next();
+                if (!await BaseHtml_1.BaseHtml.output(res, params.cssPath, params.jsPath, params.jsPriority))
+                    next();
             }
         });
     }
@@ -173,13 +195,13 @@ class Manager {
             const modules = priorityList[i];
             const promise = [];
             for (const module of modules) {
-                console.log("モジュール解放化:%s", module.name);
+                this.output("モジュール解放化:%s", module.name);
                 if (module.onDestroyModule)
                     promise.push(module.onDestroyModule());
             }
             await Promise.all(promise);
         }
-        console.log('--- Stop Manager');
+        this.output('--- Stop Manager');
     }
     /**
      *
@@ -269,9 +291,9 @@ class Manager {
                     }
                     //命令の実行
                     try {
-                        console.log('命令実行: %s %s', funcName, JSON.stringify(func.params));
+                        this.output('命令実行: %s %s', funcName, JSON.stringify(func.params));
                         result.value = await funcPt.call(classPt, ...func.params);
-                        console.log('実行結果: %s', JSON.stringify(result.value));
+                        this.output('実行結果: %s', JSON.stringify(result.value));
                     }
                     catch (e) {
                         console.error(e);
@@ -286,6 +308,50 @@ class Manager {
             res.json(session.result);
             res.end();
         });
+    }
+    //待ち受け設定
+    listen(value) {
+        let port = 0;
+        let path = null;
+        if (typeof value === 'number') {
+            port = value + parseInt(process.env.NODE_APP_INSTANCE || '0');
+        }
+        else {
+            path = value + '.' + (process.env.NODE_APP_INSTANCE || '0');
+        }
+        //終了時の処理(Windowsでは動作しない)
+        process.on('SIGINT', onExit);
+        process.on('SIGTERM', onExit);
+        async function onExit(code) {
+            await this.manager.destory();
+            if (path)
+                this.removeSock(path); //ソケットファイルの削除
+            process.exit(code);
+        }
+        if (port) {
+            this.express.listen(port); //ソケットの待ち受け設定
+            this.output('localhost:%d', port);
+        }
+        else {
+            this.removeSock(path); //ソケットファイルの削除
+            this.express.listen(path); //ソケットの待ち受け設定
+            this.output(path);
+            try {
+                fs.chmodSync(path, '666'); //ドメインソケットのアクセス権を設定
+            }
+            catch (e) { }
+        }
+    }
+    /**
+     *前回のソケットファイルの削除
+    *
+    * @memberof Main
+    */
+    removeSock(path) {
+        try {
+            fs.unlinkSync(path);
+        }
+        catch (e) { }
     }
 }
 exports.Manager = Manager;

@@ -14,6 +14,7 @@ export declare class Module {
     static onCreateModule(): Promise<boolean>;
     static onDestroyModule(): Promise<boolean>;
     static getLocalDB(): import("./LocalDB").LocalDB;
+    static output(msg: string, ...params: any[]): void;
     setSession(session: Session): void;
     onStartSession(): Promise<void>;
     onEndSession(): Promise<void>;

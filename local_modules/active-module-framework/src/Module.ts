@@ -14,6 +14,7 @@ export class Module {
 	public static async onCreateModule(): Promise<boolean> { return true }
 	public static async onDestroyModule(): Promise<boolean> { return true }
 	public static getLocalDB() { return Module.manager.getLocalDB() }
+	public static output(msg: string, ...params) { Module.manager.output(msg, ...params) }
 	public setSession(session: Session): void { this.session = session; }
 	public async onStartSession(): Promise<void> { }
 	public async onEndSession(): Promise<void> { }
@@ -23,5 +24,6 @@ export class Module {
 	public getSessionItem(name: string): any { return this.session.getSessionItem(name) }
 	public setSessionItem(name: string, value): void { this.session.setSessionItem(name, value) }
 	public getModule<T extends Module>(constructor: { new(): T }): Promise<T> { return this.session.getModule(constructor) }
+
 
 }

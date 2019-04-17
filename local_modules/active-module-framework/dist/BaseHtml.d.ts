@@ -16,5 +16,5 @@ export declare class BaseHtml {
     * @param {string[]} priorityJs		優先度の高いJSファイル
     * @memberof BaseHtml
     */
-    static output(res: express.Response, cssPath: string[], jsPath: string[], priorityJs: string[]): void;
+    static output(res: express.Response, cssPath: string[], jsPath: string[], priorityJs: string[]): Promise<boolean>;
 }
