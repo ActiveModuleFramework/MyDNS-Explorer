@@ -51,7 +51,7 @@ var AppManager = /** @class */ (function () {
         this.init();
     }
     AppManager.prototype.init = function () {
-        this.adapter = new JSW.Adapter('/');
+        this.adapter = new JSW.Adapter('./');
         this.mainWindow = new JSW.Window();
         //this.mainWindow.setAnimation
         this.mainWindow.setOverlap(true);
