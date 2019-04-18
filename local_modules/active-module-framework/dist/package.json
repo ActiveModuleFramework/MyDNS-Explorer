@@ -14,9 +14,7 @@
 		"sqlite3": "^4.0.6",
 		"ts-node": "^8.0.3",
 		"typescript": "^3.4.3",
-	    "sprintf": "^0.1.5"
-	},
-	"devDependencies": {
+	    "sprintf": "^0.1.5",
 		"@types/sha256": "^0.2.0",
 		"@types/express": "^4.16.1",
 		"@types/node": "^11.13.4",

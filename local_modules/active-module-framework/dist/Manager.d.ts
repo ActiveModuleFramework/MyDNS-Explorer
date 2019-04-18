@@ -42,7 +42,7 @@ export declare class Manager {
         [key: string]: typeof Module;
     };
     priorityList: typeof Module[][];
-    express: any;
+    express: import("express-serve-static-core").Express;
     static initFlag: any;
     /**
      *Creates an instance of Manager.
