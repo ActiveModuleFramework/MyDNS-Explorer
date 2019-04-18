@@ -181,7 +181,7 @@ class Manager {
             }
             else {
                 console.log(req.rawHeaders);
-                if (!await BaseHtml_1.BaseHtml.output(res, "/node_mydns", params.rootPath, params.cssPath, params.jsPath, params.jsPriority))
+                if (!await BaseHtml_1.BaseHtml.output(res, '.', params.rootPath, params.cssPath, params.jsPath, params.jsPriority))
                     next();
             }
         });
