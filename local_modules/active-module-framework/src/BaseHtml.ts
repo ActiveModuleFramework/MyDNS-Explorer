@@ -28,7 +28,7 @@ export class BaseHtml {
 	* @param {string[]} priorityJs		優先度の高いJSファイル
 	* @memberof BaseHtml
 	*/
-	static async output(res: express.Response, rootPath:string,cssPath: string[], jsPath: string[], priorityJs: string[]) {
+	static async output(res: express.Response, baseUrl:string,rootPath:string,cssPath: string[], jsPath: string[], priorityJs: string[]) {
 		function createJSInclude(files: FileInfo[]) {
 			let s = "";
 			for (const file of files) {
@@ -103,11 +103,11 @@ export class BaseHtml {
 		const links:string[] = []
 		for(const file of cssFiles){
 			const dir = (file as any).dir
-			links.push(`link: <${dir}/${file.name}>;rel=preload;as=script;`)
+			links.push(`<${baseUrl}/${dir}/${file.name}>;rel=preload;as=style;`)
 		}
 		for (const file of jsFiles) {
 			const dir = (file as any).dir
-			links.push(`link: <${dir}/${file.name}>;rel=preload;as=style;`)
+			links.push(`<${baseUrl}/${dir}/${file.name}>;rel=preload;as=script;`)
 		}
 		res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8','link':links });
 		res.end(data)

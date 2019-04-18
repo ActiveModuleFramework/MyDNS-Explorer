@@ -203,6 +203,7 @@ export class Manager {
 		this.express.use(params.remotePath, express.static(params.rootPath));
 		//クライアント接続時の処理
 		this.express.all(params.remotePath, async (req, res, next)=>{
+			console.log("[" + JSON.stringify(req.baseUrl) + "]")
 			//初期化が完了しているかどうか
 			if (!Manager.initFlag) {
 				res.header("Content-Type", "text/plain; charset=utf-8")
@@ -219,7 +220,8 @@ export class Manager {
 					res.json({ error: "リクエストエラー" })
 				}
 			} else {
-				if (!await BaseHtml.output(res, params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
+				console.log(req.rawHeaders)
+				if (!await BaseHtml.output(res, "/node_mydns",params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
 					next()
 			}
 		})
