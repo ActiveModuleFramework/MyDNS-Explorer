@@ -221,7 +221,7 @@ export class Manager {
 				}
 			} else {
 				console.log(req.rawHeaders)
-				if (!await BaseHtml.output(res, "/node_mydns",params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
+				if (!await BaseHtml.output(res, '.',params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
 					next()
 			}
 		})
