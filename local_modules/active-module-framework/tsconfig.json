@@ -6,6 +6,6 @@
 		"outDir":"./dist/",
 		"declaration": true,
     	"sourceMap": true,
-		"incremental": false
+		"composite": true
     }
 }

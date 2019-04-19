@@ -2,5 +2,4 @@ node_modules
 sock/app.sock.*
 log/
 db/*.db
-db/*.d
 package-lock.json

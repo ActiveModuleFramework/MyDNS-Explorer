@@ -227,7 +227,8 @@ export class Manager {
 				}
 			} else {
 				console.log(req.rawHeaders)
-				if (!await BaseHtml.output(res, '.',params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
+				const path = (req.header('location_path') || '') + params.remotePath;
+				if (!await BaseHtml.output(res, path,params.rootPath,params.cssPath, params.jsPath, params.jsPriority))
 					next()
 			}
 		})

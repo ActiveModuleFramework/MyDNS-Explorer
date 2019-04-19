@@ -7,7 +7,6 @@
 		"mapRoot": "../app",
 		"declaration": false,
     	"sourceMap": true,
-		"incremental": false
     },
 	"references": [{
 		"path": "../local_modules/active-module-framework/"

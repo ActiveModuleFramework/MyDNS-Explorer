@@ -104,11 +104,11 @@ export class BaseHtml {
 		const links:string[] = []
 		for(const file of cssFiles){
 			const dir = (file as any).dir
-			links.push(`<${baseUrl}/${dir}/${file.name}>;rel=preload;as=style;`)
+			links.push(`<${baseUrl}${dir}/${file.name}>;rel=preload;as=style;`)
 		}
 		for (const file of jsFiles) {
 			const dir = (file as any).dir
-			links.push(`<${baseUrl}/${dir}/${file.name}>;rel=preload;as=script;`)
+			links.push(`<${baseUrl}${dir}/${file.name}>;rel=preload;as=script;`)
 		}
 		res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8','link':links });
 		res.end(data)
