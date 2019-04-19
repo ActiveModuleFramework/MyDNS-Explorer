@@ -4,8 +4,7 @@
     	"module": "commonjs",
 		"rootDir": "./src/",
 		"outDir":"./dist/",
-		"composite": true,
-    	"declaration": true,
+		"declaration": true,
     	"sourceMap": true,
 		"incremental": false
     }

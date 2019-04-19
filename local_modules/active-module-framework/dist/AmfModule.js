@@ -24,4 +24,4 @@ class AmfModule {
     getModule(constructor) { return this.session.getModule(constructor); }
 }
 exports.AmfModule = AmfModule;
-//# sourceMappingURL=AMFModule.js.map
+//# sourceMappingURL=AmfModule.js.map
