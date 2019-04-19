@@ -1,13 +1,11 @@
 {
-    "compilerOptions": {
-    	"target": "es2017",
-    	"module": "commonjs",
-		"sourceRoot": "../app_src",
-		"outDir":"../app/",
-		"mapRoot": "../app",
+	"compilerOptions": {
+		"target": "es2017",
+		"module": "commonjs",
+		"outDir": "../app/",
 		"declaration": false,
-    	"sourceMap": true,
-    },
+		"sourceMap": true,
+	},
 	"references": [{
 		"path": "../local_modules/active-module-framework/"
 	}],
