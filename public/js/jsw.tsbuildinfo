@@ -1,0 +1,51 @@
+{
+  "bundle": {
+    "commonSourceDirectory": "c:/work/www/node_mydns/public_src/jsw/",
+    "sourceFiles": [
+      "c:/work/www/node_mydns/public_src/jsw/Adapter.ts",
+      "c:/work/www/node_mydns/public_src/jsw/jsw.ts",
+      "c:/work/www/node_mydns/public_src/jsw/Window.ts",
+      "c:/work/www/node_mydns/public_src/jsw/Button.ts",
+      "c:/work/www/node_mydns/public_src/jsw/CheckBox.ts",
+      "c:/work/www/node_mydns/public_src/jsw/DrawerView.ts",
+      "c:/work/www/node_mydns/public_src/jsw/Label.ts",
+      "c:/work/www/node_mydns/public_src/jsw/Libs.ts",
+      "c:/work/www/node_mydns/public_src/jsw/ListView.ts",
+      "c:/work/www/node_mydns/public_src/jsw/MessageBox.ts",
+      "c:/work/www/node_mydns/public_src/jsw/Panel.ts",
+      "c:/work/www/node_mydns/public_src/jsw/Splitter.ts",
+      "c:/work/www/node_mydns/public_src/jsw/TextBox.ts",
+      "c:/work/www/node_mydns/public_src/jsw/TreeView.ts"
+    ],
+    "js": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 597,
+          "kind": "emitHelpers",
+          "data": "typescript:extends"
+        },
+        {
+          "pos": 599,
+          "end": 128977,
+          "kind": "text"
+        }
+      ],
+      "sources": {
+        "helpers": [
+          "typescript:extends"
+        ]
+      }
+    },
+    "dts": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 37159,
+          "kind": "text"
+        }
+      ]
+    }
+  },
+  "version": "3.4.3"
+}
