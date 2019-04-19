@@ -1,0 +1,62 @@
+{
+  "bundle": {
+    "commonSourceDirectory": "C:/work/www/node_mydns/public_src/main/",
+    "sourceFiles": [
+      "C:/work/www/node_mydns/public_src/main/AppManager.ts",
+      "C:/work/www/node_mydns/public_src/main/MainView.ts",
+      "C:/work/www/node_mydns/public_src/main/MyDNS.ts",
+      "C:/work/www/node_mydns/public_src/main/Users.ts",
+      "C:/work/www/node_mydns/public_src/main/index.ts"
+    ],
+    "js": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 597,
+          "kind": "emitHelpers",
+          "data": "typescript:extends"
+        },
+        {
+          "pos": 599,
+          "end": 1206,
+          "kind": "emitHelpers",
+          "data": "typescript:awaiter"
+        },
+        {
+          "pos": 1208,
+          "end": 3024,
+          "kind": "emitHelpers",
+          "data": "typescript:generator"
+        },
+        {
+          "pos": 3026,
+          "end": 33125,
+          "kind": "text"
+        }
+      ],
+      "sources": {
+        "helpers": [
+          "typescript:extends",
+          "typescript:awaiter",
+          "typescript:generator"
+        ]
+      }
+    },
+    "dts": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 33,
+          "kind": "reference",
+          "data": "jsw.d.ts"
+        },
+        {
+          "pos": 35,
+          "end": 2488,
+          "kind": "text"
+        }
+      ]
+    }
+  },
+  "version": "3.4.3"
+}

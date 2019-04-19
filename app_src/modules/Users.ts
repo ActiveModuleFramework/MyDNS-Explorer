@@ -1,5 +1,5 @@
 import * as crypto from 'crypto'
-import {Module} from 'active-module-framework/Module'
+import { AmfModule } from 'active-module-framework/AmfModule'
 
 function getSHA256(v1:string,v2?:string) : string{
 	return crypto.createHash('sha256').update(v1+(v2?v2:'')).digest('hex');
@@ -12,11 +12,11 @@ interface UserInfo{
 	admin: boolean
 }
 
-export class Users extends Module{
+export class Users extends AmfModule{
 	userInfo : UserInfo
 
 	static async onCreateModule():Promise<boolean>{
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		//localDB.db.run('drop table users');
 		localDB.run(
 			'CREATE TABLE IF NOT EXISTS users (users_no integer primary key,users_enable boolean,\
@@ -25,7 +25,7 @@ export class Users extends Module{
 		return true;
 	}
 	private static async getLocalCount() {
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		const result = await localDB.get("select count(*) as count from users where users_enable=1")
 		return result.count
 	}
@@ -57,10 +57,10 @@ export class Users extends Module{
 			user = this.logout()
 		this.userInfo = user
 
-		Module.output('ユーザ: %s', JSON.stringify(this.userInfo) )
+		AmfModule.output('ユーザ: %s', JSON.stringify(this.userInfo) )
 	}
 	async isLogin(userId, userPass, local){
-		const localDB = Module.getManager().getLocalDB()
+		const localDB = AmfModule.getManager().getLocalDB()
 		if (local) {
 			var result = await localDB.get("select 0 from users where users_id=? and users_password=? and users_enable=1", userId, getSHA256(userPass))
 			if (!result)

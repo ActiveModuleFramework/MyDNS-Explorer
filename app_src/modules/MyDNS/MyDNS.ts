@@ -1,4 +1,4 @@
-import { Module } from 'active-module-framework/Module'
+import { AmfModule } from 'active-module-framework/AmfModule'
 import { Users } from '../Users'
 import { MyDNSReader } from './MyDNSReader'
 
@@ -7,9 +7,9 @@ import { MyDNSReader } from './MyDNSReader'
  *
  * @export
  * @class MyDNS
- * @extends {Module}
+ * @extends {AmfModule}
  */
-export class MyDNS extends Module {
+export class MyDNS extends AmfModule {
 	/**
 	 *モジュール初期化処理
 	 *
@@ -18,7 +18,7 @@ export class MyDNS extends Module {
 	 * @memberof MyDNS
 	 */
 	static async onCreateModule(): Promise<boolean> {
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		localDB.run(
 			'CREATE TABLE IF NOT EXISTS mydns (mydns_id text primary key,mydns_password text,mydns_info json)')
 
@@ -35,7 +35,7 @@ export class MyDNS extends Module {
 		const users = await this.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		const results = await localDB.all('select mydns_id as id,mydns_password as pass from mydns')
 		const promise: Promise<any>[] = []
 		for (const result of results) {
@@ -79,7 +79,7 @@ export class MyDNS extends Module {
 		if (!info)
 			return false
 
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		const result = await localDB.run('replace into mydns values(?,?,?)', id, pass, JSON.stringify(info))
 		return result.changes > 0
 	}
@@ -94,7 +94,7 @@ export class MyDNS extends Module {
 		const users = await this.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		const result = await localDB.run('delete from mydns where mydns_id=?', id)
 		return result.changes > 0
 	}
@@ -109,7 +109,7 @@ export class MyDNS extends Module {
 		const users = await session.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = Module.getLocalDB()
+		const localDB = AmfModule.getLocalDB()
 		const results = await localDB.all('select mydns_id as id,mydns_info as info from mydns')
 		for (const result of results) {
 			result.info = JSON.parse(result.info)

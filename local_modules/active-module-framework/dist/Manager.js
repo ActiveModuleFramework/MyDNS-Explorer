@@ -22,8 +22,8 @@ class Manager {
     constructor(params) {
         this.localDB = new LocalDB_1.LocalDB();
         this.stderr = '';
-        this.express = express();
         this.debug = params.debug;
+        this.express = express();
         this.output('--- Start Manager');
         //エラーメッセージをキャプチャ
         capcon.startCapture(process.stderr, (stderr) => {
@@ -76,7 +76,11 @@ class Manager {
         for (let ent of files) {
             let r;
             if (ent.isFile()) {
-                r = require(cpath + '/' + params.modulePath + '/' + ent.name);
+                let name = ent.name;
+                let ext = name.slice(-3);
+                let ext2 = name.slice(-5);
+                if (ext === '.js' || (ext === '.ts' && ext2 !== '.d.ts'))
+                    r = require(cpath + '/' + params.modulePath + '/' + name);
             }
             else if (ent.isDirectory()) {
                 const basePath = `${cpath}/${params.modulePath}/${ent.name}/`;

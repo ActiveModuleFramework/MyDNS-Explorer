@@ -45,6 +45,7 @@ export class BaseHtml {
 			}
 			return s;
 		}
+		//ファイル名に日付情報を追加
 		function addDateParam(files: FileInfo[]){
 			for (const file of files) {
 				const date = file.date

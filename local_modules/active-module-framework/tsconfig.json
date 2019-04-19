@@ -4,13 +4,9 @@
     	"module": "commonjs",
 		"rootDir": "./src/",
 		"outDir":"./dist/",
+		"composite": true,
     	"declaration": true,
     	"sourceMap": true,
-    	"noUnusedLocals": true,
-    	"noUnusedParameters": true,
-    	"noImplicitReturns": true,
-    	"noFallthroughCasesInSwitch": true,
-    	"experimentalDecorators": true,
-    	"forceConsistentCasingInFileNames": true
+		"incremental": false
     }
 }

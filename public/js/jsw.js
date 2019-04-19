@@ -305,7 +305,7 @@ var JSW;
     addEventListener("mousemove", mouseMove, false);
     addEventListener("touchmove", mouseMove, { passive: false });
     addEventListener("touchstart", mouseDown, { passive: false });
-    addEventListener("mousedown", mouseDown);
+    addEventListener("mousedown", mouseDown, false);
     function mouseDown(e) {
         var node = e.target;
         do {
@@ -314,6 +314,7 @@ var JSW;
             }
         } while (node = node.parentNode);
         deactive();
+        return false;
     }
     function deactive() {
         var activeWindows = document.querySelectorAll('[data-jsw="Window"][data-jsw-active="true"]');
@@ -334,14 +335,13 @@ var JSW;
             var node = WindowManager.moveNode; //移動中ノード
             var p = WindowManager.getPos(e); //座標の取得
             var params = {
+                event: e,
                 nodePoint: { x: WindowManager.nodeX, y: WindowManager.nodeY },
                 basePoint: { x: WindowManager.baseX, y: WindowManager.baseY },
                 nowPoint: { x: p.x, y: p.y },
                 nodeSize: { width: node.clientWidth, height: node.clientHeight }
             };
             WindowManager.callEvent(node, 'move', params);
-            e.preventDefault();
-            return false;
         }
     }
 })(JSW || (JSW = {}));
@@ -599,8 +599,10 @@ var JSW;
             this.setPos(x, y);
             this.setSize(width, height);
             //移動フレーム処理時はイベントを止める
-            if (frameIndex < 9)
-                e.preventDefault();
+            if (frameIndex < 9 || this.JData.moveable) {
+                p.event.preventDefault();
+                window.getSelection().removeAllRanges();
+            }
         };
         /**
          *イベントの受け取り

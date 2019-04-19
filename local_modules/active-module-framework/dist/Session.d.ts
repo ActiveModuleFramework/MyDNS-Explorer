@@ -1,5 +1,5 @@
 import { LocalDB } from "./LocalDB";
-import { Module } from "./Module";
+import { AmfModule } from "./AmfModule";
 /**
  *セッションデータ管理用クラス
  *
@@ -16,9 +16,9 @@ export declare class Session {
     };
     localDB: LocalDB;
     moduleTypes: {
-        [key: string]: typeof Module;
+        [key: string]: typeof AmfModule;
     };
-    modules: Module[];
+    modules: AmfModule[];
     /**
      *
      *
@@ -29,7 +29,7 @@ export declare class Session {
      * @memberof Session
      */
     init(db: LocalDB, globalHash: string, sessionHash: string, moduleTypes: {
-        [key: string]: typeof Module;
+        [key: string]: typeof AmfModule;
     }): Promise<void>;
     /**
      *
@@ -133,8 +133,8 @@ export declare class Session {
     getGlobalItem(name: string, defValue?: any): any;
     setSessionItem(name: string, value: any): void;
     getSessionItem(name: string, defValue?: any): any;
-    getModuleType<T extends typeof Module>(name: any): T;
-    getModule<T extends Module>(constructor: {
+    getModuleType<T extends typeof AmfModule>(name: any): T;
+    getModule<T extends AmfModule>(constructor: {
         new (): T;
     }): Promise<T>;
     releaseModules(): Promise<void>;

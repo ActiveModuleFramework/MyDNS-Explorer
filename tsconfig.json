@@ -3,6 +3,6 @@
 		"target": "es2017",
 		"module": "commonjs",
 		"baseUrl": ".",
-		"rootDir": "./app",
+		"rootDir": "app_src",
 	}
 }

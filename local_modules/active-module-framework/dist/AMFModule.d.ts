@@ -6,7 +6,7 @@ import { Session } from './Session';
  * @export
  * @class Module
  */
-export declare class Module {
+export declare class AmfModule {
     static manager: Manager;
     session: Session;
     static setManager(manager: Manager): void;
@@ -23,7 +23,7 @@ export declare class Module {
     setGlobalItem(name: string, value: any): void;
     getSessionItem(name: string): any;
     setSessionItem(name: string, value: any): void;
-    getModule<T extends Module>(constructor: {
+    getModule<T extends AmfModule>(constructor: {
         new (): T;
     }): Promise<T>;
 }
