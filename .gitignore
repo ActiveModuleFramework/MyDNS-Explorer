@@ -3,3 +3,4 @@ sock/app.sock.*
 log/
 db/*.db
 package-lock.json
+tsconfig.tsbuildinfo
