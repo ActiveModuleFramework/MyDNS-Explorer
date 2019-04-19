@@ -305,8 +305,10 @@ namespace JSW {
 			this.setPos(x, y)
 			this.setSize(width, height)
 			//移動フレーム処理時はイベントを止める
-			if (frameIndex < 9)
-				e.preventDefault()
+			if (frameIndex < 9 || this.JData.moveable){
+				p.event.preventDefault()
+				window.getSelection().removeAllRanges()
+			}
 		}
 		/**
 		 *イベントの受け取り

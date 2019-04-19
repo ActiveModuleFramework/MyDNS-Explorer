@@ -56,6 +56,7 @@ declare namespace JSW {
      * @param {Size} nodeSize ノード初期サイズ
      */
     interface MovePoint {
+        event: MouseEvent;
         basePoint: Point;
         nowPoint: Point;
         nodePoint: Point;

@@ -3,11 +3,11 @@
 		"sourceMap": true,
 		"target": "es5",
 		"module": "amd",
-		"outFile":"../../public/js/jsw.js",
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"moduleResolution":"node",
+		"composite": true,
 		"declaration": true,
+		"outFile":"../../public/js/jsw.js",
+		"rootDir": ".",
+		"moduleResolution":"node",
 		"lib": [
 			"es2017",
 			"dom"
@@ -19,5 +19,10 @@
 		"mode": "file",
 		"includeDeclarations": false,
 		"hideGenerator": false
-	}
+	},
+
+	"exclude": [
+		"../../public/js/*.jsw.d.ts"
+	]
+
 }

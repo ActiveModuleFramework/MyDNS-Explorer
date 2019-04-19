@@ -1,4 +1,5 @@
-import { Module } from './Module';
+import * as express from 'express';
+import { AmfModule } from './AmfModule';
 import { LocalDB } from './LocalDB';
 /**
  *マネージャ初期化用パラメータ
@@ -39,10 +40,10 @@ export declare class Manager {
     localDB: LocalDB;
     stderr: string;
     modules: {
-        [key: string]: typeof Module;
+        [key: string]: typeof AmfModule;
     };
-    priorityList: typeof Module[][];
-    express: import("express-serve-static-core").Express;
+    priorityList: typeof AmfModule[][];
+    express: express.Express;
     static initFlag: any;
     /**
      *Creates an instance of Manager.

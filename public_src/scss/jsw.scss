@@ -750,6 +750,7 @@ $DRAWER_ITEM_SIZE: 2em;
 		position: relative;
 
 		>input {
+			user-select: all;
 			position: absolute;
 			background-color: rgba(255, 255, 255, 0.8);
 			min-height: 2em;

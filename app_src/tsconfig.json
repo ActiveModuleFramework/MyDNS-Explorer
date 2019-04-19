@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+    	"target": "es2017",
+    	"module": "commonjs",
+		"sourceRoot": "../app_src",
+		"outDir":"../app/",
+		"mapRoot": "../app",
+		"declaration": false,
+    	"sourceMap": true,
+		"incremental": false
+    },
+	"references": [{
+		"path": "../local_modules/active-module-framework/"
+	}],
+}

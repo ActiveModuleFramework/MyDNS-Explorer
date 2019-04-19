@@ -3,21 +3,16 @@
 		"sourceMap": true,
 		"target": "es5",
 		"module": "amd",
-		"outFile":"../../public/js/index.js",
-		"declaration": false,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+		"composite": true,
+		"outFile": "../../public/js/index.js",
 		"moduleResolution": "node",
+		"incremental": true,
 		"lib": [
 			"es2017",
 			"dom"
 		]
 	},
-	"typedocOptions":{
-		"name": "JSW",
-		"json": "../doc/document.json",
-		"mode": "file",
-		"includeDeclarations": false,
-		"hideGenerator": false
-	}
+	"references": [{
+		"path": "../jsw"
+	}]
 }

@@ -4,10 +4,11 @@ import * as capcon from 'capture-console'
 import * as path from 'path'
 import * as express from 'express'
 
-import { Module } from './Module';
+import { AmfModule } from './AmfModule';
 import { LocalDB } from './LocalDB';
 import { Session } from './Session';
 import { BaseHtml } from './BaseHtml'
+
 /**
  *マネージャ初期化用パラメータ
  *
@@ -46,9 +47,9 @@ export class Manager {
 	debug:boolean
 	localDB: LocalDB = new LocalDB()
 	stderr: string = ''
-	modules: { [key: string]: typeof Module }
-	priorityList: typeof Module[][]
-	express = express()
+	modules: { [key: string]: typeof AmfModule }
+	priorityList: typeof AmfModule[][]
+	express : express.Express
 	static initFlag
 	/**
 	 *Creates an instance of Manager.
@@ -56,6 +57,7 @@ export class Manager {
 	 */
 	constructor(params:ManagerParams) {
 		this.debug = params.debug
+		this.express = express()
 		this.output('--- Start Manager')
 		//エラーメッセージをキャプチャ
 		capcon.startCapture(process.stderr, (stderr) => {
@@ -106,16 +108,20 @@ export class Manager {
 
 		//モジュールを読み出す
 		const files = fs.readdirSync(params.modulePath, { withFileTypes: true })
-		const modules: { [key: string]: typeof Module } = {};
+		const modules: { [key: string]: typeof AmfModule } = {};
 		for (let ent of files) {
 
-			let r: typeof Module
+			let r: typeof AmfModule
 			if(ent.isFile()){
-				r = require(cpath + '/' + params.modulePath + '/' + ent.name) as typeof Module
+				let name = ent.name
+				let ext = name.slice(-3)
+				let ext2 = name.slice(-5)
+				if (ext === '.js' || (ext === '.ts' && ext2 !== '.d.ts'))
+					r = require(cpath + '/' + params.modulePath + '/' + name) as typeof AmfModule
 
 			}else if(ent.isDirectory()){
 				const basePath = `${cpath}/${params.modulePath}/${ent.name}/`
-				let path = null
+				let path:string = null
 				for(const name of ['index.ts','index.js',ent.name+'.ts',ent.name+'.js']){
 					if (isExistFile(basePath + name)){
 						path = basePath + name
@@ -123,7 +129,7 @@ export class Manager {
 					}
 				}
 				if (path)
-					r = require(path) as typeof Module
+					r = require(path) as typeof AmfModule
 
 			}
 			if(r){
@@ -135,7 +141,7 @@ export class Manager {
 		this.modules = modules;
 
 		//依存関係の重み付け
-		const sortList: { key: number, module: typeof Module }[] = [];
+		const sortList: { key: number, module: typeof AmfModule }[] = [];
 		for (let index in modules) {
 			const module = modules[index];
 			sortList.push({ key: Manager.getPriority(modules, module), module: module })
@@ -145,7 +151,7 @@ export class Manager {
 		})
 
 		//重み付けを配列のキーに変換
-		const priorityList: typeof Module[][] = [];
+		const priorityList: typeof AmfModule[][] = [];
 		for (let v of sortList) {
 			const key = v.key - 1;
 			if (priorityList[key])
@@ -257,7 +263,7 @@ export class Manager {
 	 * @returns {number} 優先度
 	 * @memberof Manager
 	 */
-	private static getPriority(modules: { [key: string]: typeof Module }, module:typeof Module) : number{
+	private static getPriority(modules: { [key: string]: typeof AmfModule }, module: typeof AmfModule) : number{
 		if (module == null)
 			return 0;
 
