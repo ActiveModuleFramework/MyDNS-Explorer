@@ -217,6 +217,26 @@ var MainView = /** @class */ (function (_super) {
         split.setSplitterPos(300);
         split.setOverlay(true, 400);
         tree.addEventListener('itemSelect', function (e) { _this.outputInfo(e.item.getItemValue()); });
+        tree.addEventListener('itemDblClick', function (e) { return __awaiter(_this, void 0, void 0, function () {
+            var item, id, result, win;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        item = e.item;
+                        id = item.getItemValue()[0];
+                        return [4 /*yield*/, this.adapter.exec('MyDNS.getPassword', id)];
+                    case 1:
+                        result = _a.sent();
+                        if (result) {
+                            win = window.open('', '_blank');
+                            win.document.open();
+                            win.document.write("\n\t\t\t\t<html><body>\n\t\t\t\t<form name='mydns' action='https://www.mydns.jp' method='post'>\n\t\t\t\t<input type='hidden' name='masterid' value='" + id + "'>\n\t\t\t\t<input type='hidden' name='masterpwd' value='" + result.pass + "'>\n\t\t\t\t<input type='hidden' name='MENU' value='100'>\n\t\t\t\t</form>\n\t\t\t\t<script>document.mydns.submit()</script>\n\t\t\t\t");
+                            win.document.close();
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        }); });
         var list = new JSW.ListView();
         _this.listView = list;
         split.addChild(1, list, 'client');

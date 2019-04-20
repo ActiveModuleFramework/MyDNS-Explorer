@@ -98,6 +98,15 @@ export class MyDNS extends AmfModule {
 		const result = await localDB.run('delete from mydns where mydns_id=?', id)
 		return result.changes > 0
 	}
+
+	async JS_getPassword(id:string) {
+		const session = this.getSession()
+		const users = await session.getModule(Users)
+		if (!users.isAdmin())
+			return false
+		const localDB = AmfModule.getLocalDB()
+		return await localDB.get('select mydns_password as pass from mydns where mydns_id=?',id)
+	}
 	/**
 	 *MyDNSユーザリストの取得
 	 *

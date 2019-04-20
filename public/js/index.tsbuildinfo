@@ -1,12 +1,12 @@
 {
   "bundle": {
-    "commonSourceDirectory": "C:/work/www/node_mydns/public_src/main/",
+    "commonSourceDirectory": "c:/work/www/node_mydns/public_src/main/",
     "sourceFiles": [
-      "C:/work/www/node_mydns/public_src/main/AppManager.ts",
-      "C:/work/www/node_mydns/public_src/main/MainView.ts",
-      "C:/work/www/node_mydns/public_src/main/MyDNS.ts",
-      "C:/work/www/node_mydns/public_src/main/Users.ts",
-      "C:/work/www/node_mydns/public_src/main/index.ts"
+      "c:/work/www/node_mydns/public_src/main/AppManager.ts",
+      "c:/work/www/node_mydns/public_src/main/MainView.ts",
+      "c:/work/www/node_mydns/public_src/main/MyDNS.ts",
+      "c:/work/www/node_mydns/public_src/main/Users.ts",
+      "c:/work/www/node_mydns/public_src/main/index.ts"
     ],
     "js": {
       "sections": [
@@ -30,7 +30,7 @@
         },
         {
           "pos": 3026,
-          "end": 33125,
+          "end": 34412,
           "kind": "text"
         }
       ],

@@ -2933,8 +2933,8 @@ var JSW;
          * @memberof TreeItem
          */
         function TreeItem(label, opened) {
+            var _this = this;
             this.keys = {};
-            var that = this;
             var hNode = document.createElement('div');
             this.hNode = hNode;
             hNode.treeItem = this;
@@ -2943,10 +2943,13 @@ var JSW;
             row1.dataset.kind = 'TreeRow';
             hNode.appendChild(row1);
             row1.addEventListener("click", function () {
-                that.selectItem();
+                _this.selectItem();
+            });
+            row1.addEventListener("dblclick", function () {
+                _this.getTreeView().callEvent('itemDblClick', { item: _this });
             });
             row1.addEventListener('dragstart', function (e) {
-                that.getTreeView().callEvent('itemDragStart', { item: that, event: e });
+                _this.getTreeView().callEvent('itemDragStart', { item: _this, event: e });
             });
             row1.addEventListener('dragleave', function () {
                 row1.dataset.drag = '';
@@ -2960,7 +2963,7 @@ var JSW;
                 event.preventDefault();
             });
             row1.addEventListener('drop', function (e) {
-                that.getTreeView().callEvent('itemDrop', { event: e, item: that });
+                _this.getTreeView().callEvent('itemDrop', { event: e, item: _this });
                 row1.dataset.drag = '';
                 event.preventDefault();
             });
@@ -2968,7 +2971,7 @@ var JSW;
             icon.dataset.kind = 'TreeIcon';
             row1.appendChild(icon);
             icon.addEventListener("click", function (e) {
-                that.openItem(!that.opened);
+                _this.openItem(!_this.opened);
                 e.preventDefault();
                 e.stopPropagation();
             });

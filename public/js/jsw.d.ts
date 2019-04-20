@@ -1140,6 +1140,7 @@ declare namespace JSW {
     interface TreeViewEventMap extends WINDOW_EVENT_MAP {
         "itemOpen": TREEVIEW_EVENT_OPEN;
         "itemSelect": TREEVIEW_EVENT_SELECT;
+        "itemDblClick": TREEVIEW_EVENT_SELECT;
         "itemDrop": TREEVIEW_EVENT_DROP;
         "itemDragStart": TREEVIEW_EVENT_DRAG_START;
     }
