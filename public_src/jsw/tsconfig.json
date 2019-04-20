@@ -22,7 +22,7 @@
 	},
 
 	"exclude": [
-		"../../public/js/*.jsw.d.ts"
+		"../../public/js/jsw.d.ts"
 	]
 
 }

@@ -382,7 +382,6 @@
       "declaration": true,
       "sourceMap": true,
       "composite": true,
-      "project": "c:\\work\\www\\node_mydns\\local_modules\\active-module-framework\\tsconfig.json",
       "watch": true,
       "configFilePath": "c:/work/www/node_mydns/local_modules/active-module-framework/tsconfig.json"
     },
@@ -1466,13 +1465,13 @@
       "c:/work/www/node_mydns/local_modules/active-module-framework/src/itemdb.ts",
       "c:/work/www/node_mydns/local_modules/active-module-framework/src/localdb.ts",
       "c:/work/www/node_mydns/local_modules/active-module-framework/src/session.ts",
+      "c:/work/www/node_mydns/local_modules/active-module-framework/src/basehtml.ts",
       "c:/work/www/node_mydns/local_modules/active-module-framework/src/manager.ts",
       "c:/work/www/node_mydns/local_modules/active-module-framework/src/amfmodule.ts",
       "c:/work/www/node_mydns/node_modules/@types/jsdom/node_modules/parse5/lib/index.d.ts",
       "c:/work/www/node_mydns/node_modules/@types/tough-cookie/index.d.ts",
       "c:/work/www/node_mydns/node_modules/@types/jsdom/ts3.1/index.d.ts",
-      "c:/work/www/node_mydns/node_modules/@types/sha256/index.d.ts",
-      "c:/work/www/node_mydns/local_modules/active-module-framework/src/basehtml.ts"
+      "c:/work/www/node_mydns/node_modules/@types/sha256/index.d.ts"
     ]
   },
   "version": "3.4.3"

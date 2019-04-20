@@ -32,7 +32,26 @@ class MainView extends JSW.Window{
 		split.setSplitterPos(300)
 		split.setOverlay(true,400)
 		tree.addEventListener('itemSelect',(e)=>{this.outputInfo(e.item.getItemValue())})
-
+		tree.addEventListener('itemDblClick', async (e) => {
+			const item = e.item
+			const id = item.getItemValue()[0]
+			const result = await this.adapter.exec('MyDNS.getPassword',id)
+			if (result){
+				const win = window.open('','_blank')
+				win.document.open()
+				win.document.write(
+				`
+				<html><body>
+				<form name='mydns' action='https://www.mydns.jp' method='post'>
+				<input type='hidden' name='masterid' value='${id}'>
+				<input type='hidden' name='masterpwd' value='${result.pass}'>
+				<input type='hidden' name='MENU' value='100'>
+				</form>
+				<script>document.mydns.submit()</script>
+				`)
+				win.document.close()
+			}
+		 })
 		const list = new JSW.ListView()
 		this.listView = list
 		split.addChild(1,list,'client')
