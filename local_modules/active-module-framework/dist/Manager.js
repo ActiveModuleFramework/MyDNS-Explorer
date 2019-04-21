@@ -327,26 +327,31 @@ class Manager {
             path = value + '.' + (process.env.NODE_APP_INSTANCE || '0');
         }
         //終了時の処理(Windowsでは動作しない)
-        process.on('SIGINT', onExit);
-        process.on('SIGTERM', onExit);
-        async function onExit(code) {
-            await this.manager.destory();
+        const onExit = async (code) => {
+            await this.destory();
             if (path)
                 this.removeSock(path); //ソケットファイルの削除
             process.exit(code);
-        }
+        };
+        process.on('SIGINT', onExit);
+        process.on('SIGTERM', onExit);
         if (port) {
-            this.express.listen(port); //ソケットの待ち受け設定
-            this.output('localhost:%d', port);
+            //ソケットの待ち受け設定
+            this.express.listen(port, () => {
+                this.output('localhost:%d', port);
+            });
         }
         else {
-            this.removeSock(path); //ソケットファイルの削除
-            this.express.listen(path); //ソケットの待ち受け設定
-            this.output(path);
-            try {
-                fs.chmodSync(path, '666'); //ドメインソケットのアクセス権を設定
-            }
-            catch (e) { }
+            //ソケットファイルの削除
+            this.removeSock(path);
+            //ソケットの待ち受け設定
+            this.express.listen(path, (err) => {
+                this.output(path);
+                try {
+                    fs.chmodSync(path, '666'); //ドメインソケットのアクセス権を設定
+                }
+                catch (e) { }
+            }); //ソケットの待ち受け設定
         }
     }
     /**

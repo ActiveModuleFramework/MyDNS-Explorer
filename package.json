@@ -5,7 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "start": "node --no-warnings -r ts-node/register app/index.js",
-    "watch": "tsc -w -p ./app_src/,./public_src/main"
+    "watch": "tsc -w -p ./app_src/ -p /public_src/main"
   },
   "keywords": [],
   "author": "",
