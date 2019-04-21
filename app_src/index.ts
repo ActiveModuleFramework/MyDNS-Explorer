@@ -10,7 +10,7 @@ const params : amf.ManagerParams = {
 	modulePath: 'app/modules',	//モジュール配置パス
 	jsPriority: ['jsw.js'],		//優先JSファイル設定
 	debug: true,				//デバッグ用メッセージ出力
-	listen: 8000				//受付ポート/UNIXドメインソケット
-	//listen:'sock/app.sock'
+	//listen: 8000				//受付ポート/UNIXドメインソケット
+	listen:'sock/app.sock'
 }
 new amf.Manager(params)
