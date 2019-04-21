@@ -9,6 +9,7 @@ interface UserInfo {
 declare class AppManager {
     adapter: JSW.Adapter;
     mainWindow: JSW.Window;
+    mainView: MainView;
     topPanel: TopPanel;
     userInfo: UserInfo;
     loginButton: TopButton;
@@ -16,7 +17,7 @@ declare class AppManager {
     constructor();
     init(): void;
     request(): Promise<UserInfo>;
-    private login;
+    private logined;
     private showLoginView;
     private setUserName;
     private createPanel;
@@ -81,9 +82,13 @@ declare class UserListWindow extends JSW.Window {
     getUsers(): Promise<UserInfo[]>;
 }
 declare class UserEditView extends JSW.FrameWindow {
+    textUserID: JSW.TextBox;
+    textUserPass: JSW.TextBox;
     setUser(adapter: JSW.Adapter, no?: number, id?: string, name?: string, pass?: string): Promise<boolean>;
+    getUserId(): string;
+    getUserPass(): string;
 }
 declare class LoginWindow extends JSW.FrameWindow {
-    login(adapter: JSW.Adapter): Promise<UserInfo>;
+    login(adapter: JSW.Adapter, userId?: string, userPass?: string, local?: boolean): Promise<UserInfo>;
 }
 declare function Main(): Promise<void>;

@@ -1,12 +1,12 @@
 {
   "bundle": {
-    "commonSourceDirectory": "c:/work/www/node_mydns/public_src/main/",
+    "commonSourceDirectory": "z:/apps/MyDNS-Explorer/public_src/main/",
     "sourceFiles": [
-      "c:/work/www/node_mydns/public_src/main/AppManager.ts",
-      "c:/work/www/node_mydns/public_src/main/MainView.ts",
-      "c:/work/www/node_mydns/public_src/main/MyDNS.ts",
-      "c:/work/www/node_mydns/public_src/main/Users.ts",
-      "c:/work/www/node_mydns/public_src/main/index.ts"
+      "z:/apps/MyDNS-Explorer/public_src/main/AppManager.ts",
+      "z:/apps/MyDNS-Explorer/public_src/main/MainView.ts",
+      "z:/apps/MyDNS-Explorer/public_src/main/MyDNS.ts",
+      "z:/apps/MyDNS-Explorer/public_src/main/Users.ts",
+      "z:/apps/MyDNS-Explorer/public_src/main/index.ts"
     ],
     "js": {
       "sections": [
@@ -30,7 +30,7 @@
         },
         {
           "pos": 3026,
-          "end": 34412,
+          "end": 35136,
           "kind": "text"
         }
       ],
@@ -52,7 +52,7 @@
         },
         {
           "pos": 35,
-          "end": 2488,
+          "end": 2684,
           "kind": "text"
         }
       ]

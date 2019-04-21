@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [{
-		name: "app",
-		script: "./app/index.js",
+		name: "MyDNS-Explorer",
+		script: "./app/index.ts",
 		watch: ["./app", "./local_modules/active-module-framework/dist"],
 		instances: 1,
 		exec_mode: "cluster_mode",
@@ -9,9 +9,9 @@ module.exports = {
 		merge_logs: true,
 		error_file: "./log/error.log",
 		out_file: "./log/access.log",
-		node_args: ["--inspect=localhost:9229", "--no-warnings"],
+		node_args: ["--no-warnings"],
 		env: {
-			"NODE_OPTIONS": "--inspect=localhost:9229"
+			"NODE_OPTIONS": "--inspect=localhost:9229 --no-warnings"
 		}
 	}]
 }

@@ -53,13 +53,13 @@ var AppManager = /** @class */ (function () {
     AppManager.prototype.init = function () {
         this.adapter = new JSW.Adapter('./');
         this.mainWindow = new JSW.Window();
-        //this.mainWindow.setAnimation
         this.mainWindow.setOverlap(true);
         this.mainWindow.setMaximize(true);
         this.createPanel();
         this.request();
         var mainView = new MainView(this.adapter);
         this.mainWindow.addChild(mainView, 'client');
+        this.mainView = mainView;
     };
     AppManager.prototype.request = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -71,14 +71,14 @@ var AppManager = /** @class */ (function () {
                         user = _a.sent();
                         if (user) {
                             this.userInfo = user;
-                            this.login();
+                            this.logined();
                         }
                         return [2 /*return*/, user];
                 }
             });
         });
     };
-    AppManager.prototype.login = function () {
+    AppManager.prototype.logined = function () {
         var _this = this;
         this.setUserName(this.userInfo.name);
         if (this.userInfo.no === 0 && this.userInfo.admin) {
@@ -96,7 +96,7 @@ var AppManager = /** @class */ (function () {
                         case 2:
                             user = _a.sent();
                             if (user.no === -1)
-                                this.showLoginView();
+                                this.showLoginView(userEditView.getUserId(), userEditView.getUserPass(), true);
                             _a.label = 3;
                         case 3: return [2 /*return*/];
                     }
@@ -104,19 +104,20 @@ var AppManager = /** @class */ (function () {
             }); })();
         }
     };
-    AppManager.prototype.showLoginView = function () {
+    AppManager.prototype.showLoginView = function (userId, userPass, local) {
         return __awaiter(this, void 0, void 0, function () {
             var loginView, user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         loginView = new LoginWindow();
-                        return [4 /*yield*/, loginView.login(this.adapter)];
+                        return [4 /*yield*/, loginView.login(this.adapter, userId, userPass, local)];
                     case 1:
                         user = _a.sent();
                         if (user) {
                             this.userInfo = user;
-                            this.login();
+                            this.logined();
+                            this.mainView.update();
                         }
                         return [2 /*return*/];
                 }
@@ -277,6 +278,7 @@ var MainView = /** @class */ (function (_super) {
                             item.setItemValue([key, info]);
                             this.addTreeChild(item, info, infos);
                         }
+                        this.listView.clearItem();
                         return [2 /*return*/];
                 }
             });
@@ -593,6 +595,7 @@ var UserEditView = /** @class */ (function (_super) {
         });
         this.addChild(textUserID, 'top');
         textUserID.setMargin(0, 0, 0, 10);
+        this.textUserID = textUserID;
         var textUserName = new JSW.TextBox({
             label: 'ユーザ名(省略時ユーザID)', text: name || '',
             image: './css/images/login_id.svg'
@@ -605,6 +608,7 @@ var UserEditView = /** @class */ (function (_super) {
         });
         textUserPass.setMargin(0, 10, 0, 10);
         this.addChild(textUserPass, 'top');
+        this.textUserPass = textUserPass;
         var button = new JSW.Button(no ? '変更' : '追加');
         button.setMargin(0, 10, 0, 5);
         button.setAlign('center');
@@ -640,6 +644,12 @@ var UserEditView = /** @class */ (function (_super) {
             }); });
         });
     };
+    UserEditView.prototype.getUserId = function () {
+        return this.textUserID.getText();
+    };
+    UserEditView.prototype.getUserPass = function () {
+        return this.textUserPass.getText();
+    };
     return UserEditView;
 }(JSW.FrameWindow));
 var LoginWindow = /** @class */ (function (_super) {
@@ -647,7 +657,7 @@ var LoginWindow = /** @class */ (function (_super) {
     function LoginWindow() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    LoginWindow.prototype.login = function (adapter) {
+    LoginWindow.prototype.login = function (adapter, userId, userPass, local) {
         var _this = this;
         this.setSize(300, 300);
         this.setTitle('ログイン');
@@ -655,11 +665,17 @@ var LoginWindow = /** @class */ (function (_super) {
         var textUserID = new JSW.TextBox({ label: 'ユーザID', image: './css/images/login_id.svg' });
         this.addChild(textUserID, 'top');
         textUserID.setMargin(0, 0, 0, 10);
+        if (userId)
+            textUserID.setText(userId);
         var textUserPass = new JSW.TextBox({ label: 'パスワード', type: 'password', image: './css/images/login_pass.svg' });
         textUserPass.setMargin(0, 10, 0, 10);
         this.addChild(textUserPass, 'top');
+        if (userPass)
+            textUserPass.setText(userPass);
         var localCheck = new JSW.CheckBox({ text: "ローカルログイン", checked: true });
         this.addChild(localCheck, 'top');
+        if (local)
+            localCheck.setCheck(local);
         var keepCheck = new JSW.CheckBox({ text: "ログイン情報の保存" });
         this.addChild(keepCheck, 'top');
         var buttonLogin = new JSW.Button('ログイン');
