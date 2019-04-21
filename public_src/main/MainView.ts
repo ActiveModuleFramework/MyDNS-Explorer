@@ -86,6 +86,7 @@ class MainView extends JSW.Window{
 			item.setItemValue([key,info])
 			this.addTreeChild(item,info,infos)
 		}
+		this.listView.clearItem()
 	}
 	getDNSParent(infos: { [keys: string]: MyDNSInfo },id:string){
 		for (const key in infos) {
