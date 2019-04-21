@@ -10,6 +10,7 @@ interface UserInfo {
 class AppManager {
 	adapter: JSW.Adapter
 	mainWindow: JSW.Window
+	mainView:MainView
 	topPanel: TopPanel
 	userInfo: UserInfo
 	loginButton: TopButton
@@ -20,7 +21,6 @@ class AppManager {
 	init() {
 		this.adapter = new JSW.Adapter('./')
 		this.mainWindow = new JSW.Window()
-		//this.mainWindow.setAnimation
 		this.mainWindow.setOverlap(true)
 		this.mainWindow.setMaximize(true)
 
@@ -29,17 +29,18 @@ class AppManager {
 
 		const mainView = new MainView(this.adapter)
 		this.mainWindow.addChild(mainView,'client')
+		this.mainView = mainView
 
 	}
 	async request() {
 		const user = await this.adapter.exec('Users.request') as UserInfo
 		if (user) {
 			this.userInfo = user
-			this.login()
+			this.logined()
 		}
 		return user
 	}
-	private login() {
+	private logined() {
 		this.setUserName(this.userInfo.name)
 
 		if (this.userInfo.no === 0 && this.userInfo.admin) {
@@ -49,18 +50,20 @@ class AppManager {
 				if (flag) {
 					const user = await this.request()
 					if (user.no === -1)
-						this.showLoginView()
+						this.showLoginView(userEditView.getUserId(),userEditView.getUserPass(),true)
 				}
 
 			})()
 		}
 	}
-	private async showLoginView() {
+	private async showLoginView(userId?: string, userPass?: string, local?: boolean) {
 		const loginView = new LoginWindow()
-		const user = await loginView.login(this.adapter)
+		const user = await loginView.login(this.adapter, userId, userPass, local)
 		if (user) {
 			this.userInfo = user
-			this.login()
+			this.logined()
+			this.mainView.update()
+
 		}
 
 	}

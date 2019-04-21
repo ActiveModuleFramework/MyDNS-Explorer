@@ -1,21 +1,21 @@
 {
   "bundle": {
-    "commonSourceDirectory": "c:/work/www/node_mydns/public_src/jsw/",
+    "commonSourceDirectory": "z:/apps/MyDNS-Explorer/public_src/jsw/",
     "sourceFiles": [
-      "c:/work/www/node_mydns/public_src/jsw/Adapter.ts",
-      "c:/work/www/node_mydns/public_src/jsw/jsw.ts",
-      "c:/work/www/node_mydns/public_src/jsw/Window.ts",
-      "c:/work/www/node_mydns/public_src/jsw/Button.ts",
-      "c:/work/www/node_mydns/public_src/jsw/CheckBox.ts",
-      "c:/work/www/node_mydns/public_src/jsw/DrawerView.ts",
-      "c:/work/www/node_mydns/public_src/jsw/Label.ts",
-      "c:/work/www/node_mydns/public_src/jsw/Libs.ts",
-      "c:/work/www/node_mydns/public_src/jsw/ListView.ts",
-      "c:/work/www/node_mydns/public_src/jsw/MessageBox.ts",
-      "c:/work/www/node_mydns/public_src/jsw/Panel.ts",
-      "c:/work/www/node_mydns/public_src/jsw/Splitter.ts",
-      "c:/work/www/node_mydns/public_src/jsw/TextBox.ts",
-      "c:/work/www/node_mydns/public_src/jsw/TreeView.ts"
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Adapter.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/jsw.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Window.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Button.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/CheckBox.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/DrawerView.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Label.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Libs.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/ListView.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/MessageBox.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Panel.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/Splitter.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/TextBox.ts",
+      "z:/apps/MyDNS-Explorer/public_src/jsw/TreeView.ts"
     ],
     "js": {
       "sections": [

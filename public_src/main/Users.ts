@@ -72,6 +72,9 @@ class UserListWindow extends JSW.Window{
 
 }
 class UserEditView extends JSW.FrameWindow{
+	textUserID : JSW.TextBox
+	textUserPass : JSW.TextBox
+
 	setUser(adapter: JSW.Adapter,no? : number,id? : string,name? : string,pass? : string):Promise<boolean>{
 		this.setTitle('ユーザの追加')
 		this.setPos()
@@ -83,6 +86,7 @@ class UserEditView extends JSW.FrameWindow{
 		 		image: './css/images/login_id.svg' })
 		this.addChild(textUserID, 'top')
 		textUserID.setMargin(0, 0, 0, 10)
+		this.textUserID = textUserID
 
 
 		const textUserName = new JSW.TextBox({
@@ -96,6 +100,7 @@ class UserEditView extends JSW.FrameWindow{
 				image: './css/images/login_pass.svg' })
 		textUserPass.setMargin(0, 10, 0, 10)
 		this.addChild(textUserPass, 'top')
+		this.textUserPass = textUserPass
 
 		const button = new JSW.Button(no?'変更':'追加')
 		button.setMargin(0, 10, 0, 5)
@@ -123,13 +128,17 @@ class UserEditView extends JSW.FrameWindow{
 				}
 			})
 		})
-
-
+	}
+	getUserId(){
+		return this.textUserID.getText()
+	}
+	getUserPass(){
+		return this.textUserPass.getText()
 	}
 
 }
 class LoginWindow extends JSW.FrameWindow {
-	login(adapter: JSW.Adapter): Promise<UserInfo> {
+	login(adapter: JSW.Adapter,userId? : string,userPass?:string,local?:boolean): Promise<UserInfo> {
 		this.setSize(300, 300)
 		this.setTitle('ログイン')
 		this.setPadding(10, 10, 10, 10)
@@ -138,13 +147,19 @@ class LoginWindow extends JSW.FrameWindow {
 		const textUserID = new JSW.TextBox({ label: 'ユーザID', image: './css/images/login_id.svg' })
 		this.addChild(textUserID, 'top')
 		textUserID.setMargin(0, 0, 0, 10)
+		if(userId)
+			textUserID.setText(userId)
 
 		const textUserPass = new JSW.TextBox({ label: 'パスワード', type: 'password', image: './css/images/login_pass.svg' })
 		textUserPass.setMargin(0, 10, 0, 10)
 		this.addChild(textUserPass, 'top')
+		if(userPass)
+			textUserPass.setText(userPass)
 
 		const localCheck = new JSW.CheckBox({ text: "ローカルログイン",checked:true })
 		this.addChild(localCheck, 'top')
+		if(local)
+			localCheck.setCheck(local)
 
 		const keepCheck = new JSW.CheckBox({ text: "ログイン情報の保存" })
 		this.addChild(keepCheck, 'top')
