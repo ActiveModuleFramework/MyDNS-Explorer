@@ -4,7 +4,7 @@
 		"target": "es5",
 		"module": "amd",
 		"composite": true,
-		"outFile": "../../public/js/index.js",
+		"outFile": "../../../public/js/index.js",
 		"moduleResolution": "node",
 		"incremental": true,
 		"lib": [
