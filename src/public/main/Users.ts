@@ -1,5 +1,4 @@
 
-/// <reference path="../../public/js/jsw.d.ts" />
 class UserListWindow extends JSW.Window{
 	adapter: JSW.Adapter
 	listView : JSW.ListView
