@@ -11,7 +11,7 @@ new amf.Manager({
     modulePath: 'app/modules',
     jsPriority: ['jsw.js'],
     debug: true,
-    //listen: 8000				//受付ポート/UNIXドメインソケット
-    listen: 'sock/app.sock'
+    listen: 8000 //受付ポート/UNIXドメインソケット
+    //listen:'sock/app.sock'
 });
 //# sourceMappingURL=index.js.map
