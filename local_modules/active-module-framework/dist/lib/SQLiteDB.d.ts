@@ -3,9 +3,9 @@ import * as sqlite from 'sqlite3';
  *アイテムオブジェクト保存用クラス
  *
  * @export
- * @class ItemDB
+ * @class SQLiteDB
  */
-export declare class ItemDB {
+export declare class SQLiteDB {
     items: {};
     db: sqlite.Database;
     /**
@@ -13,13 +13,13 @@ export declare class ItemDB {
      *
      * @param {string} path DBのパス
      * @returns {Promise<boolean>} true:成功 false:失敗
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     open(path: string): Promise<boolean>;
     /**
      *継承オーバライド用
      *
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     protected initDB(): Promise<void>;
     /**
@@ -29,14 +29,14 @@ export declare class ItemDB {
      * @static
      * @param {string} path DBパス
      * @returns {Promise<sqlite.Database>} DBインスタンス
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     private static openAsync;
     /**
      *DBを閉じる(継承時処理追加用に非同期)
      *
      * @returns true:成功 false :失敗
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     close(): Promise<boolean>;
     /**
@@ -44,7 +44,7 @@ export declare class ItemDB {
      *
      * @param {string} name
      * @param {*} value
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     setItem(name: string, value: any): void;
     /**
@@ -52,14 +52,14 @@ export declare class ItemDB {
      *
      * @param {string} name
      * @returns {*}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     getItem(name: string): any;
     /**
      *
      *
      * @returns {sqlite.Database}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     getDB(): sqlite.Database;
     /**
@@ -68,7 +68,7 @@ export declare class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<sqlite.RunResult>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     run(sql: string, ...params: any): Promise<sqlite.RunResult>;
     /**
@@ -77,7 +77,7 @@ export declare class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise < { [key: string]: any }[] >}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     all(sql: string, ...params: any): Promise<{
         [key: string]: any;
@@ -88,7 +88,7 @@ export declare class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<{ rows: { [key: string]: any }[], statement: sqlite.Statement }>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     all2(sql: string, ...params: any): Promise<{
         rows: {
@@ -102,7 +102,7 @@ export declare class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<{ [key: string]: any }>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     get(sql: string, ...params: any): Promise<{
         [key: string]: any;
@@ -113,7 +113,7 @@ export declare class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<{ row: { [key: string]: any }, statement: sqlite.Statement }>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     get2(sql: string, ...params: any): Promise<{
         row: {

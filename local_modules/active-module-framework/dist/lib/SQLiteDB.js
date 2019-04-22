@@ -5,19 +5,19 @@ const sqlite = require("sqlite3");
  *アイテムオブジェクト保存用クラス
  *
  * @export
- * @class ItemDB
+ * @class SQLiteDB
  */
-class ItemDB {
+class SQLiteDB {
     /**
      *DBを開く
      *
      * @param {string} path DBのパス
      * @returns {Promise<boolean>} true:成功 false:失敗
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     async open(path) {
         //DBを開く
-        const db = await ItemDB.openAsync(path);
+        const db = await SQLiteDB.openAsync(path);
         if (!db)
             return false;
         this.db = db;
@@ -34,7 +34,7 @@ class ItemDB {
     /**
      *継承オーバライド用
      *
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     async initDB() { }
     /**
@@ -44,7 +44,7 @@ class ItemDB {
      * @static
      * @param {string} path DBパス
      * @returns {Promise<sqlite.Database>} DBインスタンス
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     static async openAsync(path) {
         return new Promise((resolve) => {
@@ -62,7 +62,7 @@ class ItemDB {
      *DBを閉じる(継承時処理追加用に非同期)
      *
      * @returns true:成功 false :失敗
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     async close() {
         if (!this.db)
@@ -75,7 +75,7 @@ class ItemDB {
      *
      * @param {string} name
      * @param {*} value
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     setItem(name, value) {
         this.items[name] = value;
@@ -86,7 +86,7 @@ class ItemDB {
      *
      * @param {string} name
      * @returns {*}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     getItem(name) {
         return this.items[name];
@@ -95,7 +95,7 @@ class ItemDB {
      *
      *
      * @returns {sqlite.Database}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     getDB() {
         return this.db;
@@ -106,7 +106,7 @@ class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<sqlite.RunResult>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     run(sql, ...params) {
         return new Promise((resolv, reject) => {
@@ -124,7 +124,7 @@ class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise < { [key: string]: any }[] >}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     all(sql, ...params) {
         return new Promise((resolv, reject) => {
@@ -143,7 +143,7 @@ class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<{ rows: { [key: string]: any }[], statement: sqlite.Statement }>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     all2(sql, ...params) {
         return new Promise((resolv, reject) => {
@@ -162,7 +162,7 @@ class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<{ [key: string]: any }>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     get(sql, ...params) {
         return new Promise((resolv, reject) => {
@@ -181,7 +181,7 @@ class ItemDB {
      * @param {string} sql
      * @param {...any} params
      * @returns {Promise<{ row: { [key: string]: any }, statement: sqlite.Statement }>}
-     * @memberof ItemDB
+     * @memberof SQLiteDB
      */
     get2(sql, ...params) {
         return new Promise((resolv, reject) => {
@@ -195,5 +195,5 @@ class ItemDB {
         });
     }
 }
-exports.ItemDB = ItemDB;
-//# sourceMappingURL=ItemDB.js.map
+exports.SQLiteDB = SQLiteDB;
+//# sourceMappingURL=SQLiteDB.js.map

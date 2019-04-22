@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @export
  * @class Module
  */
-class AmfModule {
-    static setManager(manager) { AmfModule.manager = manager; }
-    static getManager() { return AmfModule.manager; }
+class Module {
+    static setManager(manager) { Module.manager = manager; }
+    static getManager() { return Module.manager; }
     static async onCreateModule() { return true; }
     static async onDestroyModule() { return true; }
-    static getLocalDB() { return AmfModule.manager.getLocalDB(); }
-    static output(msg, ...params) { AmfModule.manager.output(msg, ...params); }
+    static getLocalDB() { return Module.manager.getLocalDB(); }
+    static output(msg, ...params) { Module.manager.output(msg, ...params); }
     setSession(session) { this.session = session; }
     async onStartSession() { }
     async onEndSession() { }
@@ -23,5 +23,5 @@ class AmfModule {
     setSessionItem(name, value) { this.session.setSessionItem(name, value); }
     getModule(constructor) { return this.session.getModule(constructor); }
 }
-exports.AmfModule = AmfModule;
-//# sourceMappingURL=AmfModule.js.map
+exports.Module = Module;
+//# sourceMappingURL=Module.js.map

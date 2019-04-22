@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uuid = require("uuid/v4");
-const ItemDB_1 = require("./ItemDB");
+const SQLiteDB_1 = require("./SQLiteDB");
 /**
  *ローカルDB制御用クラス
  *
  * @export
  * @class LocalDB
- * @extends {ItemDB}
+ * @extends {SQLiteDB}
  */
-class LocalDB extends ItemDB_1.ItemDB {
+class LocalDB extends SQLiteDB_1.SQLiteDB {
     /**
      *
      *

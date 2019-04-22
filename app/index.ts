@@ -1,6 +1,6 @@
-import * as amf from 'active-module-framework/Manager'
+import * as amf from 'active-module-framework'
 
-const params : amf.ManagerParams = {
+new amf.Manager({
 	remotePath: '/',			//一般コンテンツのリモートパス
 	execPath: '/',				//コマンド実行用リモートパス
 	rootPath: 'public',			//一般コンテンツのローカルパス
@@ -12,5 +12,4 @@ const params : amf.ManagerParams = {
 	debug: true,				//デバッグ用メッセージ出力
 	listen: 8000				//受付ポート/UNIXドメインソケット
 	//listen:'sock/app.sock'
-}
-new amf.Manager(params)
+})

@@ -4,7 +4,7 @@ import * as capcon from 'capture-console'
 import * as path from 'path'
 import * as express from 'express'
 
-import { AmfModule } from './AmfModule';
+import { Module } from './Module';
 import { LocalDB } from './LocalDB';
 import { Session } from './Session';
 import { BaseHtml } from './BaseHtml'
@@ -47,8 +47,8 @@ export class Manager {
 	debug:boolean
 	localDB: LocalDB = new LocalDB()
 	stderr: string = ''
-	modules: { [key: string]: typeof AmfModule }
-	priorityList: typeof AmfModule[][]
+	modules: { [key: string]: typeof Module }
+	priorityList: typeof Module[][]
 	express : express.Express
 	static initFlag
 	/**
@@ -108,16 +108,16 @@ export class Manager {
 
 		//モジュールを読み出す
 		const files = fs.readdirSync(params.modulePath, { withFileTypes: true })
-		const modules: { [key: string]: typeof AmfModule } = {};
+		const modules: { [key: string]: typeof Module } = {};
 		for (let ent of files) {
 
-			let r: typeof AmfModule
+			let r: typeof Module
 			if(ent.isFile()){
 				let name = ent.name
 				let ext = name.slice(-3)
 				let ext2 = name.slice(-5)
 				if (ext === '.js' || (ext === '.ts' && ext2 !== '.d.ts'))
-					r = require(cpath + '/' + params.modulePath + '/' + name) as typeof AmfModule
+					r = require(cpath + '/' + params.modulePath + '/' + name) as typeof Module
 
 			}else if(ent.isDirectory()){
 				const basePath = `${cpath}/${params.modulePath}/${ent.name}/`
@@ -129,7 +129,7 @@ export class Manager {
 					}
 				}
 				if (path)
-					r = require(path) as typeof AmfModule
+					r = require(path) as typeof Module
 
 			}
 			if(r){
@@ -141,7 +141,7 @@ export class Manager {
 		this.modules = modules;
 
 		//依存関係の重み付け
-		const sortList: { key: number, module: typeof AmfModule }[] = [];
+		const sortList: { key: number, module: typeof Module }[] = [];
 		for (let index in modules) {
 			const module = modules[index];
 			sortList.push({ key: Manager.getPriority(modules, module), module: module })
@@ -151,7 +151,7 @@ export class Manager {
 		})
 
 		//重み付けを配列のキーに変換
-		const priorityList: typeof AmfModule[][] = [];
+		const priorityList: typeof Module[][] = [];
 		for (let v of sortList) {
 			const key = v.key - 1;
 			if (priorityList[key])
@@ -262,7 +262,7 @@ export class Manager {
 	 * @returns {number} 優先度
 	 * @memberof Manager
 	 */
-	private static getPriority(modules: { [key: string]: typeof AmfModule }, module: typeof AmfModule) : number{
+	private static getPriority(modules: { [key: string]: typeof Module }, module: typeof Module) : number{
 		if (module == null)
 			return 0;
 

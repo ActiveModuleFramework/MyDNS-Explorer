@@ -1,14 +1,14 @@
 import * as uuid from 'uuid/v4'
-import { ItemDB } from './ItemDB';
+import { SQLiteDB } from './SQLiteDB';
 
 /**
  *ローカルDB制御用クラス
  *
  * @export
  * @class LocalDB
- * @extends {ItemDB}
+ * @extends {SQLiteDB}
  */
-export class LocalDB extends ItemDB{
+export class LocalDB extends SQLiteDB{
 	/**
 	 *
 	 *

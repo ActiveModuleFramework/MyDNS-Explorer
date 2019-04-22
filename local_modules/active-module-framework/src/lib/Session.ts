@@ -1,5 +1,5 @@
 import { LocalDB } from "./LocalDB"
-import { AmfModule } from "./AmfModule"
+import { Module } from "./Module"
 
 /**
  *セッションデータ管理用クラス
@@ -14,8 +14,8 @@ export class Session {
 	result: any
 	values: { [key: string]: any }
 	localDB: LocalDB
-	moduleTypes: { [key: string]: typeof AmfModule }
-	modules: AmfModule[] = []
+	moduleTypes: { [key: string]: typeof Module }
+	modules: Module[] = []
 	/**
 	 *
 	 *
@@ -25,7 +25,7 @@ export class Session {
 	 * @param {{ [key: string]: typeof Module }} moduleTypes
 	 * @memberof Session
 	 */
-	async init(db: LocalDB, globalHash: string, sessionHash: string, moduleTypes: { [key: string]: typeof AmfModule }) {
+	async init(db: LocalDB, globalHash: string, sessionHash: string, moduleTypes: { [key: string]: typeof Module }) {
 		this.localDB = db
 		this.moduleTypes = moduleTypes
 		const global = await db.startSession(globalHash, 96)
@@ -184,10 +184,10 @@ export class Session {
 		}
 		return (typeof items[name] === 'undefined') ? defValue : items[name]
 	}
-	getModuleType<T extends typeof AmfModule>(name): T {
+	getModuleType<T extends typeof Module>(name): T {
 		return this.moduleTypes[name] as T
 	}
-	async getModule<T extends AmfModule>(constructor: { new(): T }): Promise<T> {
+	async getModule<T extends Module>(constructor: { new(): T }): Promise<T> {
 		for (let module of this.modules) {
 			if (module instanceof constructor) {
 				return module
