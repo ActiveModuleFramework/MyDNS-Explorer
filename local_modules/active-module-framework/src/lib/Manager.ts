@@ -325,6 +325,7 @@ export class Manager {
 					}
 					//クラスインスタンスを取得
 					const classPt = await session.getModule(this.modules[name[0]])
+
 					//ファンクション名にプレフィックスを付ける
 					const funcName = 'JS_' + name[1]
 					//ファンクションを取得
