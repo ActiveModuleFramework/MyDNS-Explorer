@@ -1,12 +1,12 @@
-import { ItemDB } from './ItemDB';
+import { SQLiteDB } from './SQLiteDB';
 /**
  *ローカルDB制御用クラス
  *
  * @export
  * @class LocalDB
- * @extends {ItemDB}
+ * @extends {SQLiteDB}
  */
-export declare class LocalDB extends ItemDB {
+export declare class LocalDB extends SQLiteDB {
     /**
      *
      *

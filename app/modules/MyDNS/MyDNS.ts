@@ -1,4 +1,4 @@
-import { AmfModule } from 'active-module-framework/AmfModule'
+import * as amf from 'active-module-framework'
 import { Users } from '../Users'
 import { MyDNSReader } from './MyDNSReader'
 
@@ -7,9 +7,9 @@ import { MyDNSReader } from './MyDNSReader'
  *
  * @export
  * @class MyDNS
- * @extends {AmfModule}
+ * @extends {amf.Module}
  */
-export class MyDNS extends AmfModule {
+export class MyDNS extends amf.Module {
 	/**
 	 *モジュール初期化処理
 	 *
@@ -18,7 +18,7 @@ export class MyDNS extends AmfModule {
 	 * @memberof MyDNS
 	 */
 	static async onCreateModule(): Promise<boolean> {
-		const localDB = AmfModule.getLocalDB()
+		const localDB = amf.Module.getLocalDB()
 		localDB.run(
 			'CREATE TABLE IF NOT EXISTS mydns (mydns_id text primary key,mydns_password text,mydns_info json)')
 
@@ -35,7 +35,7 @@ export class MyDNS extends AmfModule {
 		const users = await this.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = AmfModule.getLocalDB()
+		const localDB = amf.Module.getLocalDB()
 		const results = await localDB.all('select mydns_id as id,mydns_password as pass from mydns')
 		const promise: Promise<any>[] = []
 		for (const result of results) {
@@ -79,7 +79,7 @@ export class MyDNS extends AmfModule {
 		if (!info)
 			return false
 
-		const localDB = AmfModule.getLocalDB()
+		const localDB = amf.Module.getLocalDB()
 		const result = await localDB.run('replace into mydns values(?,?,?)', id, pass, JSON.stringify(info))
 		return result.changes > 0
 	}
@@ -94,17 +94,24 @@ export class MyDNS extends AmfModule {
 		const users = await this.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = AmfModule.getLocalDB()
+		const localDB = amf.Module.getLocalDB()
 		const result = await localDB.run('delete from mydns where mydns_id=?', id)
 		return result.changes > 0
 	}
 
+	/**
+	 *パスワードを返す
+	 *
+	 * @param {string} id MyDNSのID
+	 * @returns {string} MyDNSのパスワード
+	 * @memberof MyDNS
+	 */
 	async JS_getPassword(id:string) {
 		const session = this.getSession()
 		const users = await session.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = AmfModule.getLocalDB()
+		const localDB = amf.Module.getLocalDB()
 		return await localDB.get('select mydns_password as pass from mydns where mydns_id=?',id)
 	}
 	/**
@@ -118,7 +125,7 @@ export class MyDNS extends AmfModule {
 		const users = await session.getModule(Users)
 		if (!users.isAdmin())
 			return false
-		const localDB = AmfModule.getLocalDB()
+		const localDB = amf.Module.getLocalDB()
 		const results = await localDB.all('select mydns_id as id,mydns_info as info from mydns')
 		for (const result of results) {
 			result.info = JSON.parse(result.info)

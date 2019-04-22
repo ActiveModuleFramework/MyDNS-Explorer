@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { AmfModule } from './AmfModule';
+import { Module } from './Module';
 import { LocalDB } from './LocalDB';
 /**
  *マネージャ初期化用パラメータ
@@ -40,9 +40,9 @@ export declare class Manager {
     localDB: LocalDB;
     stderr: string;
     modules: {
-        [key: string]: typeof AmfModule;
+        [key: string]: typeof Module;
     };
-    priorityList: typeof AmfModule[][];
+    priorityList: typeof Module[][];
     express: express.Express;
     static initFlag: any;
     /**

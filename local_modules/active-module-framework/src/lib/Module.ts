@@ -6,15 +6,15 @@ import { Session } from './Session'
  * @export
  * @class Module
  */
-export class AmfModule {
+export class Module {
 	static manager: Manager
 	session: Session
-	public static setManager(manager: Manager) { AmfModule.manager = manager; }
-	public static getManager(): Manager { return AmfModule.manager }
+	public static setManager(manager: Manager) { Module.manager = manager; }
+	public static getManager(): Manager { return Module.manager }
 	public static async onCreateModule(): Promise<boolean> { return true }
 	public static async onDestroyModule(): Promise<boolean> { return true }
-	public static getLocalDB() { return AmfModule.manager.getLocalDB() }
-	public static output(msg: string, ...params) { AmfModule.manager.output(msg, ...params) }
+	public static getLocalDB() { return Module.manager.getLocalDB() }
+	public static output(msg: string, ...params) { Module.manager.output(msg, ...params) }
 	public setSession(session: Session): void { this.session = session; }
 	public async onStartSession(): Promise<void> { }
 	public async onEndSession(): Promise<void> { }
@@ -23,7 +23,7 @@ export class AmfModule {
 	public setGlobalItem(name: string, value): void { this.session.setGlobalItem(name, value) }
 	public getSessionItem(name: string): any { return this.session.getSessionItem(name) }
 	public setSessionItem(name: string, value): void { this.session.setSessionItem(name, value) }
-	public getModule<T extends AmfModule>(constructor: { new(): T }): Promise<T> { return this.session.getModule(constructor) }
+	public getModule<T extends Module>(constructor: { new(): T }): Promise<T> { return this.session.getModule(constructor) }
 
 
 }
