@@ -5,7 +5,7 @@
 		"module": "amd",
 		"composite": true,
 		"declaration": true,
-		"outFile":"../../public/js/jsw.js",
+		"outFile": "../../../public/js/jsw.js",
 		"rootDir": ".",
 		"moduleResolution":"node",
 		"lib": [
@@ -22,7 +22,7 @@
 	},
 
 	"exclude": [
-		"../../public/js/jsw.d.ts"
+		"../../../public/js/jsw.d.ts"
 	]
 
 }
