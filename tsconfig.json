@@ -2,12 +2,13 @@
 	"compilerOptions": {
 		"target": "es2017",
 		"module": "commonjs",
-		"baseUrl": ".",
-		"rootDir": "/dummy",
+		"rootDir": "./sock",
 	},
 	"references": [
 		{"path": "./src/app"},
 		{"path": "./src/public/main"
 		}
 	],
+
+	"exclude": ["node_modules"]
 }
