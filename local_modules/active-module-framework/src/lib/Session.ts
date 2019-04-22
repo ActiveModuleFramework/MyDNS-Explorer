@@ -193,11 +193,17 @@ export class Session {
 				return module
 			}
 		}
-		const module = new constructor()
-		this.modules.push(module)
-		module.setSession(this)
-		await module.onStartSession()
-		return module
+		try{
+			const module = new constructor()
+			this.modules.push(module)
+			module.setSession(this)
+			await module.onStartSession()
+			return module
+		}catch(e){
+			console.error(e)
+			console.error("モジュールインスタンスの生成に失敗:"+constructor.name)
+			return null
+		}
 	}
 	async releaseModules() {
 		for (let module of this.modules) {

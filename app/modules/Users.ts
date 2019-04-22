@@ -14,7 +14,6 @@ interface UserInfo{
 
 export class Users extends amf.Module{
 	userInfo : UserInfo
-
 	static async onCreateModule():Promise<boolean>{
 		const localDB = amf.Module.getLocalDB()
 		//localDB.db.run('drop table users');
