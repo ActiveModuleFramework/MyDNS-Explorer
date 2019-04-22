@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [{
 		name: "MyDNS-Explorer",
-		script: "./app/index.ts",
+		script: "./app/index.js",
 		watch: ["./app", "./local_modules/active-module-framework/dist"],
 		instances: 1,
 		exec_mode: "cluster_mode",
