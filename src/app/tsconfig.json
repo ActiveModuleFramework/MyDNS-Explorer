@@ -2,11 +2,8 @@
 	"compilerOptions": {
 		"target": "es2017",
 		"module": "commonjs",
-		"outDir": "../../app/",
+		"outDir": "../../dist/app/",
 		"declaration": false,
 		"sourceMap": true,
-	},
-	"references": [{
-		"path": "../../local_modules/active-module-framework/"
-	}],
+	}
 }
