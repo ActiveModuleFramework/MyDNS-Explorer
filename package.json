@@ -1,22 +1,56 @@
 {
-  "name": "mydns-explorer",
-  "version": "1.0.0",
-  "description": "MyDNS管理プログラム",
-  "main": "app/index.js",
-  "scripts": {
-    "start": "node --no-warnings -r ts-node/register app/index.js",
-    "watch": "tsc -b -w"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/express": "^4.16.1",
-    "@types/jsdom": "^12.2.3",
-    "active-module-framework": "file:local_modules/active-module-framework/dist",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "ts-node": "^8.0.3",
-    "typescript": "^3.4.3"
-  }
+	"name": "mydns-explorer",
+	"version": "1.0.0",
+	"description": "MyDNS管理プログラム",
+	"main": "dist/app/index.js",
+	"scripts": {
+		"start": "node dist/app/index.js ",
+		"watch": "tsc -b -w",
+		"build-app": "tsc -b -w",
+		"build-fromt": "webpack",
+		"build-electron": "npx electron-builder --win",
+		"run": "electron ."
+	},
+	"build": {
+		"productName": "MyDNS-Explorer",
+		"appId": "mydns-explorer",
+		"directories": {
+			"output": "build"
+		},
+		"files": [
+			"dist/**/*"
+		],
+		"win": {
+			"target": "nsis"
+		}
+	},
+	"keywords": [],
+	"author": "SoraKumo",
+	"license": "ISC",
+	"dependencies": {
+		"@types/express": "^4.16.1",
+		"@types/jsdom": "^12.2.3",
+		"active-module-framework": "0.0.6",
+		"jsdom": "^15.1.0",
+		"request": "^2.88.0",
+		"request-promise": "^4.2.4",
+		"sqlite3": "^4.0.8",
+		"ts-node": "^8.1.0"
+	},
+	"devDependencies": {
+		"css-loader": "^2.1.1",
+		"electron": "^5.0.1",
+		"electron-builder": "^20.40.2",
+		"javascript-window-framework": "0.0.3",
+		"node-pre-gyp": "^0.13.0",
+		"node-sass": "^4.12.0",
+		"sass-loader": "^7.1.0",
+		"source-map-loader": "^0.2.4",
+		"style-loader": "^0.23.1",
+		"ts-loader": "^6.0.0",
+		"typescript": "^3.4.5",
+		"url-loader": "^1.1.2",
+		"webpack": "^4.31.0",
+		"webpack-cli": "^3.3.2"
+	}
 }

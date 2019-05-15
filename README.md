@@ -28,19 +28,19 @@ SPA(SinglePageApplication)を前提とするフレームワークです
 	npm install
 	npm start
 	```
-  - Windows用batで起動
+  - コンパイル
 	```
-	start.bat
+	npm run build-app
+	npm run build-front
 	```
   - pm2で起動(要pm2のグローバルモジュール)
   	```
-	npm install
 	pm2 start
 	```
 
 - フロントエンド側
 	```
-	http://localhost:8000/
+	http://localhost:58621/
 	```
 
 ## 動作ブラウザ
@@ -59,19 +59,30 @@ SPA(SinglePageApplication)を前提とするフレームワークです
 	- [promisejs](https://www.promisejs.org/)
 
 
-## ディレクトリ構成
+## electronを利用する場合
 
-- app (バックエンド用プログラムroot)
-  - modules (ActiveModuleFramework用拡張モジュール置き場)
+- electron用sqlite3のインストール
+
+```
+npm install sqlite3 --build-from-source --save --runtime=electron --target=5.0.1 --dist-url=https://atom.io/download/electron
+```
+
+- electronのWindows用パッケージの作成
+
+```
+npm run build-electron
+```
+
 - db (ローカルDB用ファイル置き場)
 - local_modules (ローカルモジュール置き場)
   - active-module-framework (ActiveModuleFramework本体)
-- public (フロントエンド公開用ディレクトリ)
-  - css (スタイルシート置き場)
-  - js (TypeScript出力結果)
-- public_src (フロントエンド用ソースコード)
-  - jsw (JSWライブラリ本体)
+- dist
+  - public (フロントエンド公開用ディレクトリ)
+  - template (トップページHTML置き場)
+  - sock (UNIXドメインソケット使用時のファイル置き場)
+- src
+  - app (バックエンド用プログラムroot)
+    - modules (ActiveModuleFramework用拡張モジュール置き場)
+  - public (フロントエンド用ソースコード)
   - main (フロントエンド用プログラム)
-  - scss (フロントエンド用CSS)
-- sock (UNIXドメインソケット使用時のファイル置き場)
-- template (トップページHTML置き場)
+    - scss (フロントエンド用CSS)
