@@ -8,9 +8,9 @@ import {JSDOM} from 'jsdom'
  */
 interface MyDNSDomainInfo{
 	domainname: string
-	update:Date
-	ipV4: string
-	ipV6: string
+	update:Date|null
+	ipV4: string|null
+	ipV6: string|null
 	mx: string[]
 	prio: number[]
 	hostname: string[]
@@ -61,7 +61,7 @@ export class MyDNSReader{
 			jar: this.mJar,
 			url: 'https://www.mydns.jp/',
 			method: 'POST',
-			transform: (body, response)=> {
+			transform: (body: string, response: any)=> {
 				return { 'headers': response.headers, 'body': body }},
 			form: {
 				MENU: 100,
@@ -69,7 +69,6 @@ export class MyDNSReader{
 				masterpwd: pass
 			}
 		}
-
 		let value = await request(options).catch(() => null) as { headers: string[], body: string }
 		if (value && value.body && value.body.indexOf("./?MENU=090") >= 0) {
 			return true
@@ -83,7 +82,7 @@ export class MyDNSReader{
 	 * @returns {Promise<MyDNSInfo>}
 	 * @memberof MyDNSReader
 	 */
-	async getInfo(): Promise<MyDNSInfo>{
+	async getInfo(): Promise<MyDNSInfo|null>{
 		const childInfo = this.getChildInfo()
 		const domainInfo = this.getDomainInfo()
 		const values = await Promise.all([childInfo, domainInfo]).catch(()=>{return null})
@@ -97,7 +96,7 @@ export class MyDNSReader{
 	 * @returns {Promise<MyDNSChildInfo>}
 	 * @memberof MyDNSReader
 	 */
-	async getChildInfo(): Promise<MyDNSChildInfo>{
+	async getChildInfo(): Promise<MyDNSChildInfo|null>{
 		var options = {
 			jar: this.mJar,
 			url: 'https://www.mydns.jp/',
@@ -139,7 +138,7 @@ export class MyDNSReader{
 	 * @returns {Promise<MyDNSDomainInfo>}
 	 * @memberof MyDNSReader
 	 */
-	async getDomainInfo(): Promise<MyDNSDomainInfo>{
+	async getDomainInfo(): Promise<MyDNSDomainInfo|null>{
 		var options = {
 			jar: this.mJar,
 			url: 'https://www.mydns.jp/',
@@ -160,7 +159,7 @@ export class MyDNSReader{
 	 * @returns {MyDNSDomainInfo}
 	 * @memberof MyDNSReader
 	 */
-	private static getParams(dom: JSDOM) : MyDNSDomainInfo{
+	private static getParams(dom: JSDOM) : null|MyDNSDomainInfo{
 		try {
 			let params: MyDNSDomainInfo = {
 				domainname: '',
@@ -176,7 +175,7 @@ export class MyDNSReader{
 			}
 			const doc = dom.window.document;
 			const ipAddress = doc.querySelector('FONT.userinfo12') as HTMLFontElement
-			const ipText = ipAddress.textContent
+			const ipText = ipAddress.textContent||''
 			const ip = ipText.match(/IPv4\(A\):([\d\.]*?), IPv6\(AAAA\):(.*?)\. (?:Last IP notify:(.*)|Please)/)
 			if (ip) {
 				if (ip.length >= 3) {
@@ -233,7 +232,7 @@ export class MyDNSReader{
 				JOB: 'CHECK'
 			}
 		}
-		const form = options.form
+		const form:{[key:string]:string|number} = options.form
 		form['DNSINFO[domainname]'] = params.domainname
 		for (let i = 0; params.mx[i]; i++) {
 			form[`DNSINFO[mx][${i}]`] = params.mx[i]

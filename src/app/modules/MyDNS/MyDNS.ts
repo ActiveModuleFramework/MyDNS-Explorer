@@ -33,7 +33,7 @@ export class MyDNS extends amf.Module {
 	 */
 	async JS_update() :Promise<boolean>{
 		const users = await this.getModule(Users)
-		if (!users.isAdmin())
+		if (!users || !users.isAdmin())
 			return false
 		const localDB = amf.Module.getLocalDB()
 		const results = await localDB.all('select mydns_id as id,mydns_password as pass from mydns')
@@ -70,7 +70,7 @@ export class MyDNS extends amf.Module {
 	 */
 	async JS_addUser(id: string, pass: string):Promise<boolean> {
 		const users = await this.getModule(Users)
-		if (!users.isAdmin())
+		if (!users || !users.isAdmin())
 			return false
 		const reader = new MyDNSReader()
 		if (!await reader.getSession(id, pass))
@@ -92,7 +92,7 @@ export class MyDNS extends amf.Module {
 	 */
 	async JS_delUser(id: string) {
 		const users = await this.getModule(Users)
-		if (!users.isAdmin())
+		if (!users || !users.isAdmin())
 			return false
 		const localDB = amf.Module.getLocalDB()
 		const result = await localDB.run('delete from mydns where mydns_id=?', id)
@@ -109,7 +109,7 @@ export class MyDNS extends amf.Module {
 	async JS_getPassword(id:string) {
 		const session = this.getSession()
 		const users = await session.getModule(Users)
-		if (!users.isAdmin())
+		if (!users || !users.isAdmin())
 			return false
 		const localDB = amf.Module.getLocalDB()
 		return await localDB.get('select mydns_password as pass from mydns where mydns_id=?',id)
@@ -123,7 +123,7 @@ export class MyDNS extends amf.Module {
 	async JS_getUsers() {
 		const session = this.getSession()
 		const users = await session.getModule(Users)
-		if (!users.isAdmin())
+		if (!users || !users.isAdmin())
 			return false
 		const localDB = amf.Module.getLocalDB()
 		const results = await localDB.all('select mydns_id as id,mydns_info as info from mydns')

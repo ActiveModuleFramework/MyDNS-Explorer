@@ -6,6 +6,10 @@ function getSHA256(v1, v2) {
     return crypto.createHash('sha256').update(v1 + (v2 ? v2 : '')).digest('hex');
 }
 class Users extends amf.Module {
+    constructor() {
+        super(...arguments);
+        this.userInfo = null;
+    }
     static async onCreateModule() {
         const localDB = amf.Module.getLocalDB();
         //localDB.db.run('drop table users');

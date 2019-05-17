@@ -31,7 +31,7 @@ class MyDNS extends amf.Module {
      */
     async JS_update() {
         const users = await this.getModule(Users_1.Users);
-        if (!users.isAdmin())
+        if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
         const results = await localDB.all('select mydns_id as id,mydns_password as pass from mydns');
@@ -68,7 +68,7 @@ class MyDNS extends amf.Module {
      */
     async JS_addUser(id, pass) {
         const users = await this.getModule(Users_1.Users);
-        if (!users.isAdmin())
+        if (!users || !users.isAdmin())
             return false;
         const reader = new MyDNSReader_1.MyDNSReader();
         if (!await reader.getSession(id, pass))
@@ -89,7 +89,7 @@ class MyDNS extends amf.Module {
      */
     async JS_delUser(id) {
         const users = await this.getModule(Users_1.Users);
-        if (!users.isAdmin())
+        if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
         const result = await localDB.run('delete from mydns where mydns_id=?', id);
@@ -105,7 +105,7 @@ class MyDNS extends amf.Module {
     async JS_getPassword(id) {
         const session = this.getSession();
         const users = await session.getModule(Users_1.Users);
-        if (!users.isAdmin())
+        if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
         return await localDB.get('select mydns_password as pass from mydns where mydns_id=?', id);
@@ -119,7 +119,7 @@ class MyDNS extends amf.Module {
     async JS_getUsers() {
         const session = this.getSession();
         const users = await session.getModule(Users_1.Users);
-        if (!users.isAdmin())
+        if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
         const results = await localDB.all('select mydns_id as id,mydns_info as info from mydns');
