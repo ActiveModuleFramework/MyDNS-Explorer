@@ -30,7 +30,7 @@
   "dependencies": {
     "@types/express": "^4.16.1",
     "@types/jsdom": "^12.2.3",
-    "active-module-framework": "0.0.6",
+    "active-module-framework": "0.0.9",
     "jsdom": "^15.1.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
@@ -38,10 +38,11 @@
     "ts-node": "^8.1.0"
   },
   "devDependencies": {
+    "@types/request-promise": "^4.1.43",
     "css-loader": "^2.1.1",
     "electron": "^5.0.1",
     "electron-builder": "^20.40.2",
-    "javascript-window-framework": "0.0.3",
+    "javascript-window-framework": "0.0.4",
     "node-pre-gyp": "^0.13.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",

@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const amf = require("active-module-framework");
+const electron = require("electron");
 const path = require("path");
-const port = 58621;
+//ActiveModuleFrameworkの設定
 new amf.Manager({
     remotePath: '/',
     execPath: '/',
@@ -15,25 +16,24 @@ new amf.Manager({
     modulePath: path.resolve(__dirname, './modules'),
     jsPriority: [],
     debug: false,
-    listen: port //受付ポート/UNIXドメインソケット
-    //listen:'dist/sock/app.sock'
+    listen: 58621,
+    listened: startElectron,
 });
-const electron = require("electron");
-const app = electron.app;
-if (app) {
-    const BrowserWindow = electron.BrowserWindow;
-    let mainWindow = null;
-    app.on("window-all-closed", () => {
-        if (process.platform != "darwin") {
-            app.quit();
-        }
-    });
-    app.on("ready", () => {
-        mainWindow = new BrowserWindow({ width: 1280, height: 720, useContentSize: true });
-        mainWindow.loadURL(`http://localhost:${port}`);
-        mainWindow.on("closed", () => {
-            mainWindow = null;
+//--------------------------
+//Electron用起動設定
+function startElectron(port) {
+    const app = electron.app;
+    //Electronで実行されているか確認
+    if (app) {
+        app.on("window-all-closed", () => {
+            if (process.platform != "darwin") {
+                app.quit();
+            }
         });
-    });
+        app.on("ready", () => {
+            const window = new electron.BrowserWindow({ width: 1280, height: 720, useContentSize: true });
+            window.loadURL(`http://localhost:${port}`);
+        });
+    }
 }
 //# sourceMappingURL=index.js.map

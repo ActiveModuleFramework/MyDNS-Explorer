@@ -13,7 +13,7 @@ interface UserInfo{
 }
 
 export class Users extends amf.Module{
-	userInfo : UserInfo
+	userInfo : UserInfo|null = null
 	static async onCreateModule():Promise<boolean>{
 		const localDB = amf.Module.getLocalDB()
 		//localDB.db.run('drop table users');
@@ -30,7 +30,7 @@ export class Users extends amf.Module{
 	}
 	async onStartSession(){
 		var count = await Users.getLocalCount()
-		let user: UserInfo = null
+		let user: UserInfo|null = null
 
 		if (count === 0) {
 			//ローカルユーザが存在しなければ管理者に設定
@@ -58,7 +58,7 @@ export class Users extends amf.Module{
 
 		amf.Module.output('ユーザ: %s', JSON.stringify(this.userInfo) )
 	}
-	async isLogin(userId, userPass, local){
+	async isLogin(userId:string, userPass:string, local:boolean){
 		const localDB = amf.Module.getManager().getLocalDB()
 		if (local) {
 			var result = await localDB.get("select 0 from users where users_id=? and users_password=? and users_enable=1", userId, getSHA256(userPass))
@@ -68,7 +68,7 @@ export class Users extends amf.Module{
 		}
 		return false;
 	}
-	static async getUserInfoFromNo(no, local): Promise<UserInfo> {
+	static async getUserInfoFromNo(no:number, local:boolean): Promise<UserInfo|null> {
 		if (local) {
 			const localDB = Users.getLocalDB()
 			var result = await localDB.get("select users_no as no,users_id as id,users_name as name,'local' as type,true as admin from users where users_no=? ", no)
@@ -77,7 +77,7 @@ export class Users extends amf.Module{
 		}
 		return null
 	}
-	static async getUserInfo(userId, local){
+	static async getUserInfo(userId:string, local:boolean){
 		if (local){
 			const localDB = Users.getLocalDB()
 			var result = await localDB.get("select users_no as no,users_id as id,users_name as name,'local' as type,true as admin from users where users_id=? ", userId)
@@ -152,7 +152,7 @@ export class Users extends amf.Module{
 		return false
 
 	}
-	async JS_getUsers(local){
+	async JS_getUsers(local:boolean){
 		if (!this.isAdmin())
 			return false;
 		if (local) {

@@ -138,7 +138,7 @@ class MyDNSReader {
             };
             const doc = dom.window.document;
             const ipAddress = doc.querySelector('FONT.userinfo12');
-            const ipText = ipAddress.textContent;
+            const ipText = ipAddress.textContent || '';
             const ip = ipText.match(/IPv4\(A\):([\d\.]*?), IPv6\(AAAA\):(.*?)\. (?:Last IP notify:(.*)|Please)/);
             if (ip) {
                 if (ip.length >= 3) {
