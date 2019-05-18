@@ -57,13 +57,13 @@ const manager = new amf.Manager({
     rootPath: path.resolve(__dirname, '../public'),
     cssPath: ['css'],
     jsPath: ['js'],
-    localDBPath: path.resolve(__dirname, '../db/app.db'),
-    //localDBPath: path.resolve('app.db'),	//ローカルDBパス(カレントパスに設定)
+    //	localDBPath: path.resolve(__dirname,'../db/app.db'),	//ローカルDBパス
+    localDBPath: path.resolve('app.db'),
     modulePath: path.resolve(__dirname, './modules'),
     jsPriority: [],
     debug: false,
     listened,
-    //listen: listenPort									//受付ポート/UNIXドメインソケット
-    listen: path.resolve(__dirname, '../sock/app.sock') //UNIXドメインソケットを使用する場合
+    listen: listenPort //受付ポート/UNIXドメインソケット
+    //listen:'dist/sock/app.sock'							//UNIXドメインソケットを使用する場合
 });
 //# sourceMappingURL=index.js.map

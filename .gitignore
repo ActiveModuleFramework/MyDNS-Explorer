@@ -1,6 +1,6 @@
 node_modules
-sock/app.sock.*
-log/
+dist/sock/app.sock.*
+/log
 *.db
 package-lock.json
 *.tsbuildinfo
