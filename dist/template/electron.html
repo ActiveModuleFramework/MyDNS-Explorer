@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+	<script defer>
+		addEventListener("DOMContentLoaded", ()=>{
+			const p = {};
+			location.search.substring(1).split('&').forEach(function (v) { s = v.split('='); p[s[0]] = s[1]; })
+			switch(p['cmd']){
+				case 'error':
+					document.body.innerText = `ポート${p['port']}が使用中`;
+					break;
+				default:
+					document.body.innerText = 'バックエンド起動中・・・';
+					break;
+			}
+		})
+
+	</script>
+</head>
+
+<body>
+	aaaaaaw
+</body>
+
+</html>

@@ -86,7 +86,7 @@ export class MyDNSReader{
 		const childInfo = this.getChildInfo()
 		const domainInfo = this.getDomainInfo()
 		const values = await Promise.all([childInfo, domainInfo]).catch(()=>{return null})
-		if(values === null)
+		if (values === null || values[0] === null || values[1] === null)
 			return null
 		return { childInfo: values[0], domainInfo: values[1] } as MyDNSInfo
 	}
@@ -103,7 +103,9 @@ export class MyDNSReader{
 			method: 'GET',
 			qs: { MENU: '200' },
 		}
-		let value = await request(options).catch(() => null)
+		let value:string|null = null
+		for (let i = 0; i < 5 && value === null;i++)
+			value = await request(options).catch(() => null)
 		if (value === null)
 			return null
 
@@ -145,7 +147,9 @@ export class MyDNSReader{
 			method: 'GET',
 			qs:{MENU:'300'},
 		}
-		let value = await request(options).catch(() => null)
+		let value: string | null = null
+		for (let i = 0; i < 5 && value === null; i++)
+			value = await request(options).catch(() => null)
 		if (value === null)
 			return null
 		return MyDNSReader.getParams(new JSDOM(value))
@@ -245,7 +249,6 @@ export class MyDNSReader{
 			form[`DNSINFO[delegateid][${i}]`] = params.delegateid[i]
 		}
 		let value = await request(options).catch(() => null)
-		//fs.appendFile("temp2.html", value, 'utf8', () => { })
 		if (value && value.indexOf('<INPUT type="hidden" name="JOB" value="CHANGE">')>=0){
 			const options = {
 				jar: this.mJar,
