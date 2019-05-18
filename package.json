@@ -7,7 +7,7 @@
     "start": "node dist/app/index.js ",
     "watch": "tsc -b -w",
     "build-app": "tsc -b",
-    "build-front": "webpack",
+    "build-front": "npx webpack",
     "build-electron": "npx electron-builder --win",
     "install-sqlite": "npm install sqlite3 --build-from-source --save --runtime=electron --target=5.0.1 --dist-url=https://atom.io/download/electron",
     "run": "electron ."

@@ -24,7 +24,7 @@ if (app) {
 		//起動メッセージの表示
 		window.loadURL(`file://${path.resolve(__dirname,'../template/electron.html')}`)
 	}
-
+	//準備完了時に初期化
 	if (app.isReady()) {
 		init()
 	} else {
