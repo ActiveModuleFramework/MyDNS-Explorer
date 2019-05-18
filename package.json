@@ -9,6 +9,7 @@
     "build-app": "tsc -b",
     "build-front": "webpack",
     "build-electron": "npx electron-builder --win",
+	"install-sqlite": "npm install sqlite3 --build-from-source --save --runtime=electron --target=5.0.1 --dist-url=https://atom.io/download/electron",
     "run": "electron ."
   },
   "build": {
@@ -30,7 +31,7 @@
   "dependencies": {
     "@types/express": "^4.16.1",
     "@types/jsdom": "^12.2.3",
-    "active-module-framework": "0.0.9",
+    "active-module-framework": "0.0.10",
     "jsdom": "^15.1.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
