@@ -10,17 +10,21 @@
 テスト的に作ってみました  
 SPA(SinglePageApplication)を前提とするフレームワークです  
 
-- サーバを用意してWEBサービスとして公開しようかとも思いましたが、  
- 他人のIDとパスワードを預かることになり、負担が大きいので止めました  
+- ダウンロードできるパッケージ版は、Windowsのデスクトップアプリとしてそのまま動作します
 
 ## ライセンス
 　MITライセンス  
 　ソースコードは自由に使って構いませんが、無保証です  
 
+## Download
+　[Windows インストーラ版](https://github.com/ActiveModuleFramework/MyDNS-Explorer/raw/bin/MyDNS-Explorer%20Setup%201.0.0.exe)
+　[Windows ZIP圧縮版](https://github.com/ActiveModuleFramework/MyDNS-Explorer/raw/bin/MyDNS-Explorer.zip)
+
 ## スクリーンショット
 ![スクリーンショット](https://raw.githubusercontent.com/activemoduleframework/MyDNS-Explorer/sc/ScreenShot01.png)
 
-## 起動方法
+
+## ソースからの起動方法(Node.jsプログラムとして)
 
 - バックエンド側
   - 普通に起動
@@ -33,9 +37,9 @@ SPA(SinglePageApplication)を前提とするフレームワークです
 	npm run build-app
 	npm run build-front
 	```
-  - pm2で起動(要pm2のグローバルモジュール)
+  - 起動
   	```
-	pm2 start
+	npm start
 	```
 
 - フロントエンド側
@@ -43,20 +47,17 @@ SPA(SinglePageApplication)を前提とするフレームワークです
 	http://localhost:58621/
 	```
 
-## 動作ブラウザ
+## 動作環境
 - 一般的なブラウザ(IE11でも動作可能)
 
-## 使用技術
+## 使っているもの
 
-- バックエンド側
-	- Node.js 10系統
-	- TypeScript 3系統
-	- ActiveModuleFramework
-
-- フロントエンド側
-	- TypeScript 3系統
-	- [JSW](https://croud.jp/?p=484)
-	- [promisejs](https://www.promisejs.org/)
+- フロントエンドフレームワーク (オレオレフレームワーク)
+  - [javascript-window-framework](https://www.npmjs.com/package/javascript-window-framework)
+- バックエンドフレームワーク (オレオレフレームワーク)
+  - [active-module-framework](https://www.npmjs.com/package/active-module-framework)
+- パッケージ化
+  - [electron](https://www.npmjs.com/package/electron)
 
 
 ## electronを利用する場合
@@ -64,7 +65,7 @@ SPA(SinglePageApplication)を前提とするフレームワークです
 - electron用sqlite3のインストール
 
 ```
-npm install sqlite3 --build-from-source --save --runtime=electron --target=5.0.1 --dist-url=https://atom.io/download/electron
+npm run install-sqlite
 ```
 
 - electronのWindows用パッケージの作成

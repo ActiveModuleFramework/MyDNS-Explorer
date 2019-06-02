@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
 const amf = require("active-module-framework");
 function getSHA256(v1, v2) {
-    return crypto.createHash('sha256').update(v1 + (v2 ? v2 : '')).digest('hex');
+    return crypto
+        .createHash("sha256")
+        .update(v1 + (v2 ? v2 : ""))
+        .digest("hex");
 }
 class Users extends amf.Module {
     constructor() {
@@ -13,8 +16,8 @@ class Users extends amf.Module {
     static async onCreateModule() {
         const localDB = amf.Module.getLocalDB();
         //localDB.db.run('drop table users');
-        localDB.run('CREATE TABLE IF NOT EXISTS users (users_no integer primary key,users_enable boolean,\
-			users_id TEXT,users_password TEXT,users_name TEXT,users_info JSON,UNIQUE(users_id))');
+        localDB.run("CREATE TABLE IF NOT EXISTS users (users_no integer primary key,users_enable boolean,\
+			users_id TEXT,users_password TEXT,users_name TEXT,users_info JSON,UNIQUE(users_id))");
         return true;
     }
     static async getLocalCount() {
@@ -27,29 +30,37 @@ class Users extends amf.Module {
         let user = null;
         if (count === 0) {
             //ローカルユーザが存在しなければ管理者に設定
-            user = { no: 0, type: 'local', id: 'Admin', name: '暫定管理者', admin: true };
+            user = {
+                no: 0,
+                type: "local",
+                id: "Admin",
+                name: "暫定管理者",
+                admin: true
+            };
         }
         else {
             //セッションユーザの確認
-            user = this.getSessionItem('user');
+            user = this.getSessionItem("user");
             if (user) {
                 if (user.no === 0)
-                    user = null; //暫定管理者なら情報をクリア
-                else //ユーザナンバーからユーザ情報を再設定
-                    user = await Users.getUserInfoFromNo(user.no, user.type === 'local');
+                    user = null;
+                //暫定管理者なら情報をクリア
+                //ユーザナンバーからユーザ情報を再設定
+                else
+                    user = await Users.getUserInfoFromNo(user.no, user.type === "local");
             }
             else {
                 //セッションに情報が無かった場合、グローバルログインを確認
-                user = this.getGlobalItem('user');
+                user = this.getGlobalItem("user");
                 if (user)
-                    this.setSessionItem('user', user);
+                    this.setSessionItem("user", user);
             }
         }
         //ユーザが存在しなければゲスト扱い
         if (!user)
             user = this.logout();
         this.userInfo = user;
-        amf.Module.output('ユーザ: %s', JSON.stringify(this.userInfo));
+        amf.Module.output("ユーザ: %s", JSON.stringify(this.userInfo));
     }
     async isLogin(userId, userPass, local) {
         const localDB = amf.Module.getManager().getLocalDB();
@@ -80,9 +91,15 @@ class Users extends amf.Module {
         return null;
     }
     logout() {
-        const user = { no: -1, id: 'GUEST', name: 'GUEST', type: 'normal', admin: false };
-        this.setGlobalItem('user', null);
-        this.setSessionItem('user', null);
+        const user = {
+            no: -1,
+            id: "GUEST",
+            name: "GUEST",
+            type: "normal",
+            admin: false
+        };
+        this.setGlobalItem("user", null);
+        this.setSessionItem("user", null);
         this.userInfo = user;
         return user;
     }
@@ -99,8 +116,8 @@ class Users extends amf.Module {
         if (await this.isLogin(userId, userPass, local)) {
             const result = await Users.getUserInfo(userId, local);
             if (keep)
-                this.setGlobalItem('user', result);
-            this.setSessionItem('user', result);
+                this.setGlobalItem("user", result);
+            this.setSessionItem("user", result);
             this.userInfo = result;
             return result;
         }
@@ -115,9 +132,9 @@ class Users extends amf.Module {
             var userInfo = await localDB.get("select * from users where users_no=?", userNo);
             if (userNo && !userInfo)
                 return false;
-            if (userNo == 0 && (userPass === ''))
+            if (userNo == 0 && userPass === "")
                 return false;
-            if (userName === '')
+            if (userName === "")
                 userName = userId;
             var pass = userPass ? getSHA256(userPass) : userInfo.users_password;
             let result;

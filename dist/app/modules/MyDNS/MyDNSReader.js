@@ -23,10 +23,10 @@ class MyDNSReader {
     async getSession(id, pass) {
         var options = {
             jar: this.mJar,
-            url: 'https://www.mydns.jp/',
-            method: 'POST',
+            url: "https://www.mydns.jp/",
+            method: "POST",
             transform: (body, response) => {
-                return { 'headers': response.headers, 'body': body };
+                return { headers: response.headers, body: body };
             },
             form: {
                 MENU: 100,
@@ -34,7 +34,7 @@ class MyDNSReader {
                 masterpwd: pass
             }
         };
-        let value = await request(options).catch(() => null);
+        let value = (await request(options).catch(() => null));
         if (value && value.body && value.body.indexOf("./?MENU=090") >= 0) {
             return true;
         }
@@ -49,7 +49,9 @@ class MyDNSReader {
     async getInfo() {
         const childInfo = this.getChildInfo();
         const domainInfo = this.getDomainInfo();
-        const values = await Promise.all([childInfo, domainInfo]).catch(() => { return null; });
+        const values = await Promise.all([childInfo, domainInfo]).catch(() => {
+            return null;
+        });
         if (values === null || values[0] === null || values[1] === null)
             return null;
         return { childInfo: values[0], domainInfo: values[1] };
@@ -63,9 +65,9 @@ class MyDNSReader {
     async getChildInfo() {
         var options = {
             jar: this.mJar,
-            url: 'https://www.mydns.jp/',
-            method: 'GET',
-            qs: { MENU: '200' },
+            url: "https://www.mydns.jp/",
+            method: "GET",
+            qs: { MENU: "200" }
         };
         let value = null;
         for (let i = 0; i < 5 && value === null; i++)
@@ -106,9 +108,9 @@ class MyDNSReader {
     async getDomainInfo() {
         var options = {
             jar: this.mJar,
-            url: 'https://www.mydns.jp/',
-            method: 'GET',
-            qs: { MENU: '300' },
+            url: "https://www.mydns.jp/",
+            method: "GET",
+            qs: { MENU: "300" }
         };
         let value = null;
         for (let i = 0; i < 5 && value === null; i++)
@@ -129,7 +131,7 @@ class MyDNSReader {
     static getParams(dom) {
         try {
             let params = {
-                domainname: '',
+                domainname: "",
                 update: null,
                 ipV4: null,
                 ipV6: null,
@@ -141,8 +143,8 @@ class MyDNSReader {
                 delegateid: []
             };
             const doc = dom.window.document;
-            const ipAddress = doc.querySelector('FONT.userinfo12');
-            const ipText = ipAddress.textContent || '';
+            const ipAddress = doc.querySelector("FONT.userinfo12");
+            const ipText = ipAddress.textContent || "";
             const ip = ipText.match(/IPv4\(A\):([\d\.]*?), IPv6\(AAAA\):(.*?)\. (?:Last IP notify:(.*)|Please)/);
             if (ip) {
                 if (ip.length >= 3) {
@@ -192,15 +194,15 @@ class MyDNSReader {
     async setSetting(params) {
         const options = {
             jar: this.mJar,
-            url: 'https://www.mydns.jp/',
-            method: 'POST',
+            url: "https://www.mydns.jp/",
+            method: "POST",
             form: {
                 MENU: 300,
-                JOB: 'CHECK'
+                JOB: "CHECK"
             }
         };
         const form = options.form;
-        form['DNSINFO[domainname]'] = params.domainname;
+        form["DNSINFO[domainname]"] = params.domainname;
         for (let i = 0; params.mx[i]; i++) {
             form[`DNSINFO[mx][${i}]`] = params.mx[i];
             form[`DNSINFO[prio][${i}]`] = params.prio[i];
@@ -212,18 +214,19 @@ class MyDNSReader {
             form[`DNSINFO[delegateid][${i}]`] = params.delegateid[i];
         }
         let value = await request(options).catch(() => null);
-        if (value && value.indexOf('<INPUT type="hidden" name="JOB" value="CHANGE">') >= 0) {
+        if (value &&
+            value.indexOf('<INPUT type="hidden" name="JOB" value="CHANGE">') >= 0) {
             const options = {
                 jar: this.mJar,
-                url: 'https://www.mydns.jp/',
-                method: 'POST',
+                url: "https://www.mydns.jp/",
+                method: "POST",
                 form: {
                     MENU: 300,
-                    JOB: 'CHANGE'
+                    JOB: "CHANGE"
                 }
             };
             let value = await request(options).catch(() => null);
-            if (value && value.indexOf('We accepted your Domain') >= 0)
+            if (value && value.indexOf("We accepted your Domain") >= 0)
                 return true;
         }
         return false;

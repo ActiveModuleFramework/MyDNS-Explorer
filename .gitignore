@@ -1,7 +1,7 @@
 node_modules
-dist/sock/app.sock.*
+/dist/sock/app.sock.*
 /log
+/build
 *.db
 package-lock.json
 *.tsbuildinfo
-/build

@@ -20,7 +20,7 @@ class MyDNS extends amf.Module {
      */
     static async onCreateModule() {
         const localDB = amf.Module.getLocalDB();
-        localDB.run('CREATE TABLE IF NOT EXISTS mydns (mydns_id text primary key,mydns_password text,mydns_info json)');
+        localDB.run("CREATE TABLE IF NOT EXISTS mydns (mydns_id text primary key,mydns_password text,mydns_info json)");
         return true;
     }
     /**
@@ -34,19 +34,19 @@ class MyDNS extends amf.Module {
         if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
-        const results = await localDB.all('select mydns_id as id,mydns_password as pass from mydns');
+        const results = await localDB.all("select mydns_id as id,mydns_password as pass from mydns");
         const promise = [];
         for (const result of results) {
             const id = result.id;
             const pass = result.pass;
             const p = (async () => {
                 const reader = new MyDNSReader_1.MyDNSReader();
-                if (!await reader.getSession(id, pass))
+                if (!(await reader.getSession(id, pass)))
                     return false;
                 const info = await reader.getInfo();
                 if (!info)
                     return false;
-                const result = await localDB.run('update mydns set mydns_info=? where mydns_id=?', JSON.stringify(info), id);
+                const result = await localDB.run("update mydns set mydns_info=? where mydns_id=?", JSON.stringify(info), id);
                 return result.changes > 0;
             })();
             promise.push(p);
@@ -71,13 +71,13 @@ class MyDNS extends amf.Module {
         if (!users || !users.isAdmin())
             return false;
         const reader = new MyDNSReader_1.MyDNSReader();
-        if (!await reader.getSession(id, pass))
+        if (!(await reader.getSession(id, pass)))
             return false;
         const info = await reader.getInfo();
         if (!info)
             return false;
         const localDB = amf.Module.getLocalDB();
-        const result = await localDB.run('replace into mydns values(?,?,?)', id, pass, JSON.stringify(info));
+        const result = await localDB.run("replace into mydns values(?,?,?)", id, pass, JSON.stringify(info));
         return result.changes > 0;
     }
     /**
@@ -92,7 +92,7 @@ class MyDNS extends amf.Module {
         if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
-        const result = await localDB.run('delete from mydns where mydns_id=?', id);
+        const result = await localDB.run("delete from mydns where mydns_id=?", id);
         return result.changes > 0;
     }
     /**
@@ -108,7 +108,7 @@ class MyDNS extends amf.Module {
         if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
-        return await localDB.get('select mydns_password as pass from mydns where mydns_id=?', id);
+        return await localDB.get("select mydns_password as pass from mydns where mydns_id=?", id);
     }
     /**
      *MyDNSユーザリストの取得
@@ -122,7 +122,7 @@ class MyDNS extends amf.Module {
         if (!users || !users.isAdmin())
             return false;
         const localDB = amf.Module.getLocalDB();
-        const results = await localDB.all('select mydns_id as id,mydns_info as info from mydns');
+        const results = await localDB.all("select mydns_id as id,mydns_info as info from mydns");
         for (const result of results) {
             result.info = JSON.parse(result.info);
         }
