@@ -1,77 +1,39 @@
 import * as JWF from 'javascript-window-framework'
-const USER_SVG = require("./scss/main/user.svg")
-const USERS_SVG = require("./scss/main/users.svg")
-const DNS_SVG = require("./scss/main/dns.svg")
 import { MainView } from './MainView';
 import { UserInfo, UserListWindow, UserEditView, LoginWindow } from './Users';
 import { MyDNSUserWindow } from './MyDNS';
+import { TopPanel, TopButton } from './TopPanel';
 
+const USER_SVG = require("./scss/main/user.svg")
+const USERS_SVG = require("./scss/main/users.svg")
+const DNS_SVG = require("./scss/main/dns.svg")
 
-
+/**
+ *アプリケーション全体の管理クラス
+ *
+ * @export
+ * @class AppManager
+ */
 export class AppManager {
 	adapter: JWF.Adapter
 	mainWindow: JWF.Window
 	mainView:MainView
 	topPanel: TopPanel
-	userInfo: UserInfo
+	userInfo?: UserInfo
 	loginButton: TopButton
 	usersButton: TopButton
+	/**
+	 *Creates an instance of AppManager.
+	 * @memberof AppManager
+	 */
 	constructor() {
-		this.init()
-	}
-	init() {
+		//通信アダプタの作成
 		this.adapter = new JWF.Adapter('./')
+		//アプリケーションのメインウインドウの作成
 		this.mainWindow = new JWF.Window()
 		this.mainWindow.setOverlap(true)
 		this.mainWindow.setMaximize(true)
-
-		this.createPanel()
-		this.request();
-
-		const mainView = new MainView(this.adapter)
-		this.mainWindow.addChild(mainView,'client')
-		this.mainView = mainView
-
-	}
-	async request() {
-		const user = await this.adapter.exec('Users.request') as UserInfo
-		if (user) {
-			this.userInfo = user
-			this.logined()
-		}
-		return user
-	}
-	private logined() {
-		this.setUserName(this.userInfo.name)
-
-		if (this.userInfo.no === 0 && this.userInfo.admin) {
-			(async () => {
-				const userEditView = new UserEditView()
-				const flag = await userEditView.setUser(this.adapter, 0, 'admin', 'ローカル管理者')
-				if (flag) {
-					const user = await this.request()
-					if (user.no === -1)
-						this.showLoginView(userEditView.getUserId(),userEditView.getUserPass(),true)
-				}
-
-			})()
-		}
-	}
-	private async showLoginView(userId?: string, userPass?: string, local?: boolean) {
-		const loginView = new LoginWindow()
-		const user = await loginView.login(this.adapter, userId, userPass, local)
-		if (user) {
-			this.userInfo = user
-			this.logined()
-			this.mainView.update()
-
-		}
-
-	}
-	private setUserName(name) {
-		this.loginButton.setText(name)
-	}
-	private createPanel() {
+		//画面上部の操作パネルの作成
 		this.topPanel = new TopPanel()
 		this.mainWindow.addChild(this.topPanel, 'top')
 
@@ -94,34 +56,91 @@ export class AppManager {
 				this.mainWindow.addChild(dnsUserWindow, 'client')
 			})
 
-	}
-}
-interface TopButton extends HTMLDivElement{
-	setText(text:string):void
-}
-class TopPanel extends JWF.Window{
-	constructor(){
-		super()
-		this.setHeight(80)
-		const client = this.getClient()
-		client.dataset.style = 'TOP'
-	}
-	createButton(imageURL:string,title:string,text?:string){
-		var buttonNode = document.createElement('div') as TopButton
-		var imageNode = document.createElement('img')
-		var textNode = document.createElement('div')
-		buttonNode.appendChild(imageNode)
-		buttonNode.appendChild(textNode)
-		imageNode.src = imageURL
-		imageNode.title = title
-		if (text)
-			textNode.innerText = text
 
-		buttonNode.setText = (text:string)=>{
-			textNode.innerText = text
+
+
+
+		//セッションとユーザ情報の処理要求
+		this.request()
+		//メイン画面の作成
+		const mainView = new MainView(this.adapter)
+		this.mainWindow.addChild(mainView, 'client')
+		this.mainView = mainView
+	}
+
+	/**
+	 *セッションログイン処理
+	 *
+	 * @returns
+	 * @memberof AppManager
+	 */
+	async request() {
+		//ユーザ情報の要求
+		const user = (await this.adapter.exec('Users.request')) as UserInfo
+		if (user) {
+			this.userInfo = user
+			//ログイン後の処理要求
+			this.logined()
 		}
-		this.getClient().appendChild(buttonNode)
-
-		return buttonNode
+		return user
 	}
+	/**
+	 *ログイン後の処理
+	 *
+	 * @private
+	 * @memberof AppManager
+	 */
+	private logined() {
+    if(!this.userInfo)
+      return;
+		this.setUserName(this.userInfo.name)
+
+		if (this.userInfo.no === 0 && this.userInfo.admin) {
+			(async () => {
+				const userEditView = new UserEditView()
+				const flag = await userEditView.setUser(this.adapter, 0, 'admin', 'ローカル管理者')
+				if (flag) {
+					const user = await this.request()
+          const id = userEditView.getUserId();
+          const pass = userEditView.getUserPass();
+					if (user.no === -1 && id && pass)
+						this.showLoginView(id,pass,true)
+				}
+
+			})()
+		}
+	}
+	/**
+	 *ログイン用ウインドウの表示
+	 *
+	 * @private
+	 * @param {string} [userId]
+	 * @param {string} [userPass]
+	 * @param {boolean} [local]
+	 * @memberof AppManager
+	 */
+	private async showLoginView(userId?: string, userPass?: string, local?: boolean) {
+		const loginView = new LoginWindow()
+		const user = await loginView.login(this.adapter, userId, userPass, local)
+		if (user) {
+			this.userInfo = user
+			this.logined()
+			this.mainView.update()
+
+		}
+
+	}
+	/**
+	 *ユーザ名の設定
+	 *
+	 * @private
+	 * @param {*} name
+	 * @memberof AppManager
+	 */
+	private setUserName(name:string) {
+		this.loginButton.setText(name)
+	}
+
+
+
 }

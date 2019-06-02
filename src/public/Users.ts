@@ -10,6 +10,13 @@ export interface UserInfo {
 	admin: boolean
 }
 
+/**
+ *ローカルユーザ管理用クラス
+ *
+ * @export
+ * @class UserListWindow
+ * @extends {JWF.Window}
+ */
 export class UserListWindow extends JWF.Window {
 	adapter: JWF.Adapter
 	listView: JWF.ListView
@@ -35,7 +42,7 @@ export class UserListWindow extends JWF.Window {
 		delButton.addEventListener('buttonClick', () => {
 			const values = this.listView.getSelectValues()
 			if (values.length) {
-				const userInfo = values[0]
+				const userInfo = values[0] as UserInfo
 				const messageBox = new JWF.MessageBox('確認', `[${userInfo.name}]を削除しますか？`, { 'OK': true, 'Cancel': false })
 				messageBox.addEventListener('buttonClick', async (value) => {
 					if (value)
@@ -81,9 +88,16 @@ export class UserListWindow extends JWF.Window {
 
 
 }
+/**
+ *ユーザ編集用クラス
+ *
+ * @export
+ * @class UserEditView
+ * @extends {JWF.FrameWindow}
+ */
 export class UserEditView extends JWF.FrameWindow {
-	textUserID: JWF.TextBox
-	textUserPass: JWF.TextBox
+	textUserID?: JWF.TextBox
+	textUserPass?: JWF.TextBox
 
 	setUser(adapter: JWF.Adapter, no?: number, id?: string, name?: string, pass?: string): Promise<boolean> {
 		this.setTitle('ユーザの追加')
@@ -143,13 +157,24 @@ export class UserEditView extends JWF.FrameWindow {
 		})
 	}
 	getUserId() {
+    if(!this.textUserID)
+      return null;
 		return this.textUserID.getText()
 	}
 	getUserPass() {
+        if(!this.textUserPass)
+      return null;
 		return this.textUserPass.getText()
 	}
 
 }
+/**
+ *ログインウインドウ用クラス
+ *
+ * @export
+ * @class LoginWindow
+ * @extends {JWF.FrameWindow}
+ */
 export class LoginWindow extends JWF.FrameWindow {
 	login(adapter: JWF.Adapter, userId?: string, userPass?: string, local?: boolean): Promise<UserInfo> {
 		this.setSize(300, 300)
@@ -195,13 +220,13 @@ export class LoginWindow extends JWF.FrameWindow {
 
 		return new Promise((resolv) => {
 			this.addEventListener('closed', () => {
-				resolv(null)
+				resolv()
 			})
 			buttonLogin.addEventListener('buttonClick', async () => {
 				msgLabel.setText('ログイン中')
 				const info = await adapter.exec('Users.login',
 					textUserID.getText(), textUserPass.getText(),
-					localCheck.isCheck(), keepCheck.isCheck())
+					localCheck.isCheck(), keepCheck.isCheck()) as UserInfo
 				if (info) {
 					resolv(info)
 					msgLabel.setText('認証成功')
@@ -214,7 +239,7 @@ export class LoginWindow extends JWF.FrameWindow {
 			})
 			buttonLogout.addEventListener('buttonClick', async () => {
 				msgLabel.setText('ログアウト中')
-				const info = await adapter.exec('Users.logout')
+				const info = await adapter.exec('Users.logout') as UserInfo
 				if (info) {
 					resolv(info)
 					msgLabel.setText('ログアウト完了')
