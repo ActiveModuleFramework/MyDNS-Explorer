@@ -1,17 +1,17 @@
 {
-	"compilerOptions": {
-		"sourceMap": true,
-		"inlineSources": true,
-		"target": "es5",
-		"module": "commonjs",
+  "compilerOptions": {
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es5",
+    "module": "commonjs",
     "strict": true,
-		//"declaration": false,
-		//"composite": true,
-		"outDir": "../../dist/public/js",
-		"incremental": true,
-		"lib": [
-			"es2017",
-			"dom"
-		]
-	}
+    //"declaration": false,
+    //"composite": true,
+    "outDir": "../../dist/public/js",
+    "incremental": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  }
 }
