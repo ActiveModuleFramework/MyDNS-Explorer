@@ -4,7 +4,7 @@ import * as amf from 'active-module-framework'
 function getSHA256(v1:string,v2?:string) : string{
 	return crypto.createHash('sha256').update(v1+(v2?v2:'')).digest('hex');
 }
-interface UserInfo{
+export interface UserInfo{
 	no: number
 	type: string
 	id: string

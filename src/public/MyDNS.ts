@@ -1,6 +1,15 @@
 import * as JWF from 'javascript-window-framework'
+import { UserInfo } from './Users';
 const LOGIN_ID_SVG = require("./scss/main/login_id.svg")
 const LOGIN_PASS_SVG = require("./scss/main/login_pass.svg")
+
+/**
+ *MyDNSのユーザ管理用ウインドウクラス
+ *
+ * @export
+ * @class MyDNSEditWindow
+ * @extends {JWF.FrameWindow}
+ */
 export class MyDNSEditWindow extends JWF.FrameWindow {
 
 	enter(adapter: JWF.Adapter) {
@@ -36,7 +45,7 @@ export class MyDNSEditWindow extends JWF.FrameWindow {
 			addLogin.addEventListener('buttonClick', async () => {
 				msgLabel.setText('ID確認中')
 				const info = await adapter.exec('MyDNS.addUser',
-					textUserID.getText(), textUserPass.getText())
+					textUserID.getText(), textUserPass.getText()) as {}
 				if (info) {
 					resolv(info)
 					msgLabel.setText('追加成功')
@@ -75,6 +84,13 @@ export interface MyDNSInfo {
 	childInfo: MyDNSChildInfo
 }
 
+/**
+ *MyDNSのユーザ編集用クラス
+ *
+ * @export
+ * @class MyDNSUserWindow
+ * @extends {JWF.Window}
+ */
 export class MyDNSUserWindow extends JWF.Window{
 	listView : JWF.ListView
 	adapter : JWF.Adapter
@@ -104,7 +120,7 @@ export class MyDNSUserWindow extends JWF.Window{
 		delButton.addEventListener('buttonClick', () => {
 			const values = this.listView.getSelectValues()
 			if (values.length) {
-				const userInfo = values[0]
+				const userInfo = values[0] as UserInfo;
 				const messageBox = new JWF.MessageBox('確認', `[${userInfo.id}]を削除しますか？`, { 'OK': true, 'Cancel': false })
 				messageBox.addEventListener('buttonClick', async (value) => {
 					if (value)
@@ -122,15 +138,20 @@ export class MyDNSUserWindow extends JWF.Window{
 		this.active()
 
 	}
+	/**
+	 *表示更新
+	 *
+	 * @memberof MyDNSUserWindow
+	 */
 	async update(){
-		const results = await this.adapter.exec('MyDNS.getUsers')
+		const results = await this.adapter.exec('MyDNS.getUsers') as {[key: string]: unknown}[]
 		if(results){
 			const listView = this.listView
 			listView.clearItem()
 			for(const result of results){
-				const info = result.info as MyDNSInfo
+				const info = result.info as {domainInfo:{update:string,ipV4:string,domainname:string}}
 				const update = info.domainInfo.update?(new Date(info.domainInfo.update)).toLocaleString():''
-				listView.addItem([result.id, update, info.domainInfo.ipV4,info.domainInfo.domainname],result)
+				listView.addItem([result.id as string, update, info.domainInfo.ipV4,info.domainInfo.domainname],result)
 			}
 		}
 	}

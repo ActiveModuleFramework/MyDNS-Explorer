@@ -1,6 +1,13 @@
 import * as JWF from 'javascript-window-framework'
 import * as MyDNS from './MyDNS'
 
+/**
+ *メインビュー表示用クラス
+ *
+ * @export
+ * @class MainView
+ * @extends {JWF.Window}
+ */
 export class MainView extends JWF.Window{
 	adapter: JWF.Adapter
 	treeView : JWF.TreeView
@@ -8,9 +15,12 @@ export class MainView extends JWF.Window{
 	constructor(adapter: JWF.Adapter){
 		super()
 		this.adapter = adapter
+
+		//分割バーの作成
 		const split = new JWF.Splitter()
 		this.addChild(split,'client')
 
+		//ツリービュー上部のパネル作成
 		const panel = new JWF.Panel()
 		split.addChild(0, panel, 'top')
 		const button = new JWF.Button('表示更新')
@@ -29,32 +39,36 @@ export class MainView extends JWF.Window{
 
 		})
 
+		//ツリービューの作成
 		const tree = new JWF.TreeView()
 		this.treeView = tree
 		split.addChild(0,tree,'client')
 		split.setSplitterPos(300)
 		split.setOverlay(true,400)
-		tree.addEventListener('itemSelect',(e)=>{this.outputInfo(e.item.getItemValue())})
+		tree.addEventListener('itemSelect',(e)=>{this.outputInfo(e.item.getItemValue() as [string, MyDNS.MyDNSInfo])})
 		tree.addEventListener('itemDblClick', async (e) => {
 			const item = e.item
-			const id = item.getItemValue()[0]
-			const result = await this.adapter.exec('MyDNS.getPassword',id)
+			const id = (item.getItemValue() as string[])[0]
+			const result = await this.adapter.exec('MyDNS.getPassword',id) as {pass:string}
 			if (result){
+				//MyDNSに遷移して自動ログインするための処理
 				const win = window.open('','_blank')
+        if(!win)
+          return;
 				win.document.open()
 				win.document.write(
-				`
-				<html><body>
+				`<html><body>
 				<form name='mydns' action='https://www.mydns.jp' method='post'>
 				<input type='hidden' name='masterid' value='${id}'>
 				<input type='hidden' name='masterpwd' value='${result.pass}'>
 				<input type='hidden' name='MENU' value='100'>
 				</form>
-				<script>document.mydns.submit()</script>
-				`)
+				<script>document.mydns.submit()</script>`)
 				win.document.close()
 			}
 		 })
+
+		 //リストビューの作成
 		const list = new JWF.ListView()
 		this.listView = list
 		split.addChild(1,list,'client')
@@ -62,15 +76,20 @@ export class MainView extends JWF.Window{
 
 		this.update()
 	}
+	/**
+	 *表示更新
+	 *
+	 * @memberof MainView
+	 */
 	async update() {
-		const results = await this.adapter.exec('MyDNS.getUsers')
+		const results = await this.adapter.exec('MyDNS.getUsers') as  {[key: string]: unknown}[]
 
 		//IDごとに情報を展開
 		const infos: { [keys: string]: MyDNS.MyDNSInfo} = {}
 		if (results) {
 			for(const result of results){
 				const info = result.info as MyDNS.MyDNSInfo
-				infos[result.id] = info
+				infos[result.id as string] = info
 			}
 		}
 		const topInfos: { [keys: string]: MyDNS.MyDNSInfo } = {}
@@ -91,7 +110,16 @@ export class MainView extends JWF.Window{
 		}
 		this.listView.clearItem()
 	}
-	getDNSParent(infos: { [keys: string]: MyDNS.MyDNSInfo },id:string){
+	/**
+	 *MyDNSの親IDを返す
+	 *
+	 * @private
+	 * @param {{ [keys: string]: MyDNS.MyDNSInfo }} infos
+	 * @param {string} id
+	 * @returns
+	 * @memberof MainView
+	 */
+	private getDNSParent(infos: { [keys: string]: MyDNS.MyDNSInfo },id:string){
 		for (const key in infos) {
 			const info = infos[key]
 			const childInfo = info.childInfo
@@ -102,7 +130,16 @@ export class MainView extends JWF.Window{
 		}
 		return null
 	}
-	addTreeChild(item: JWF.TreeItem, info, infos: { [keys: string]: MyDNS.MyDNSInfo }){
+	/**
+	 *ツリービューに情報を追加
+	 *
+	 * @private
+	 * @param {JWF.TreeItem} item
+	 * @param {*} info
+	 * @param {{ [keys: string]: MyDNS.MyDNSInfo }} infos
+	 * @memberof MainView
+	 */
+	private addTreeChild(item: JWF.TreeItem, info:MyDNS.MyDNSInfo, infos: { [keys: string]: MyDNS.MyDNSInfo }){
 		const childInfo = info.childInfo
 		for (const cid of childInfo.masterid) {
 			const cinfo = infos[cid]
@@ -113,11 +150,17 @@ export class MainView extends JWF.Window{
 			}
 		}
 	}
-	outputInfo(value){
+	/**
+	 *リストビューに情報を表示
+	 *
+	 * @param {*} value
+	 * @memberof MainView
+	 */
+	outputInfo(value : [string,MyDNS.MyDNSInfo]){
 		if (!value)
 			return
 		const id = value[0]
-		const info = value[1] as MyDNS.MyDNSInfo
+		const info = value[1]
 		const domainInfo = info.domainInfo
 		//const childInfo = info.childInfo
 		const listView = this.listView

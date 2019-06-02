@@ -33,6 +33,7 @@ module.exports = {
 	},
 	resolve: {
 		extensions: ['.ts', '.js', '.scss','.svg'],
+    moduleExtensions: ['node_modules']
 	},
 	devtool: 'source-map',
 };
