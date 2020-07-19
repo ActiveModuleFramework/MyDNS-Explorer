@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/request-promise": "^4.1.44",
     "css-loader": "^2.1.1",
-    "electron": "^5.0.2",
+    "electron": "^9.1.0",
     "electron-builder": "^20.41.0",
     "javascript-window-framework": "0.0.12",
     "node-pre-gyp": "^0.13.0",
